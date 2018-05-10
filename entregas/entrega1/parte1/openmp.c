@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <stdbool.h>
+#include <omp.h>
 
 /*
 1. 
@@ -51,31 +52,33 @@ int main(int argc,char* argv[]){
  M=(double*)malloc(sizeof(double)*sizeMatrix);
 
  //Inicializa las matrices
- for(i=0;i<n;i++){
-  for(j=0;j<n;j++){
+ #pragma omp parallel for schedule(static) default(shared) private(i)
+   for(i=0;i<n;i++){
+    #pragma omp parallel for schedule(static) default(shared) private(j)
+    for(j=0;j<n;j++){
 
-   A[i*n+j]=rand()%10;
-   B[i*n+j]=rand()%10;
-   C[i*n+j]=rand()%10;
-   D[i*n+j]=rand()%10;
+     A[i*n+j]=rand()%10;
+     B[i*n+j]=rand()%10;
+     C[i*n+j]=rand()%10;
+     D[i*n+j]=rand()%10;
 
-   if(i>=j){
-    L[i+j+i*(i-1)/2]=n;
+     if(i>=j){
+      L[i+j+i*(i-1)/2]=n;
+     }
+
+     M[i*n+j]=0;	
+    }
    }
-
-   M[i*n+j]=0;	
-  }
- }
-
+ 
  //inicializo b
- for(i=0; i<n; i++){
-  for(j=0; j<n; j++){
-   b += B[i*n+j];
-  }
+ #pragma omp parallel for schedule(static) default(shared) private(i) reduction(+:b)
+ for(i=0; i<sizeMatrix; i++){
+   b += B[i];
  }
  b /= sizeMatrix;
 
  //inicializo l
+ #pragma omp parallel for schedule(static) default(shared) private(i) reduction(+:l)
  for(i=0; i<sizeL; i++){
   l += L[i];
  }
@@ -88,31 +91,37 @@ int main(int argc,char* argv[]){
  productoPorElemento(A,l,A,sizeMatrix);
  producto(A,B,M,r,N,sizeMatrix,sizeBlock);
  //volver a poner a 0 o crear nueva matriz y inicializar en 0
+ #pragma omp parallel for schedule(static) default(shared) private(i)
  for(i=0;i<sizeMatrix;i++){
  	A[i]=0;
  }
  producto(M,C,A,r,N,sizeMatrix,sizeBlock);
  //volver a poner a 0 o crear nueva matriz y inicializar en 0
+ #pragma omp parallel for schedule(static) default(shared) private(i)
  for(i=0;i<sizeMatrix;i++){
  	M[i]=0;
  }
 
  //𝑏𝐿𝐵𝐷
  productoPorElemento(L,b,L,sizeL);
+ #pragma omp parallel for schedule(static) default(shared) private(i)
  for(i=0;i<n;i++){
+  #pragma omp parallel for schedule(static) default(shared) private(j)
   for(j=0;j<n;j++){
-   //aca cambio
+   #pragma omp parallel for schedule(static) default(shared) private(k)
    for(k=n;k>=i;--k){
     M[i*n+j]=M[i*n+j] + B[i*n+k]*L[k+j+k*(k-1)/2];
    }
   }
  }
+ #pragma omp parallel for schedule(static) default(shared) private(i)
  for(i=0;i<sizeMatrix;i++){
  	B[i]=0;
  }
  producto(M,D,B,r,N,sizeMatrix,sizeBlock);
 
  //𝑙.𝐴𝐵𝐶 + 𝑏𝐿𝐵𝐷
+ #pragma omp parallel for schedule(static) default(shared) private(i)
  for(i=0;i<sizeMatrix;i++){
   M[i] = A[i]+B[i];
  } 
@@ -134,15 +143,21 @@ void producto(double *A,double *B,double *C, int r,int N,int sizeMatrix, int siz
    int I,J,K,i,j,k;
    int despA, despB, despC,desp;
 
+  #pragma omp parallel for schedule(static,N/3) default(shared) private(I)
 	for (I=0;I<N;I++){
+    #pragma omp parallel for schedule(static,N/3) default(shared) private(J)
 		for (J=0;J<N;J++){
 			despC = (I*N+J)*sizeBlock;
+      #pragma omp parallel for schedule(static,N/3) default(shared) private(K)
 			for (K=0;K<N;K++){
 				despA = (I*N+K)*sizeBlock;
 				despB = (K*N+J)*sizeBlock;
+        #pragma omp parallel for schedule(static,r/3) default(shared) private(i)
 				for (i=0;i<r;i++){
+          #pragma omp parallel for schedule(static,r/3) default(shared) private(j)
 					for (j=0;j<r;j++){
 						desp = despC + i*r+j;
+            #pragma omp parallel for schedule(static,r/3) default(shared) private(k)
 						for (k=0;k<r;k++){
 							C[desp] += A[despA + i*r+k]*B[despB + k*r+j]; 
 						};
@@ -155,6 +170,7 @@ void producto(double *A,double *B,double *C, int r,int N,int sizeMatrix, int siz
 
 void productoPorElemento(double *A,double b,double *C, int sizeMatrix){
  int i;
+ #pragma omp parallel for schedule(static,sizeMatrix/3) default(shared) private(i)
  for(i=0;i<sizeMatrix;i++){
     C[i]= A[i]*b;
  }
