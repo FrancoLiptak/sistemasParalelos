@@ -3,8 +3,9 @@
 #include <math.h>
 #include <stdbool.h>
 #include <pthread.h>
+#include <semaphore.h>
 
-#define NUM_THREADS 10
+#define NUM_THREADS 5
 
 /*
 1. 
@@ -32,23 +33,32 @@ De la misma forma para los HILOS 2 3 4.
 Lo subo a git
 */
 
+int sizeMatrix, sizeL, n, b, l, N, r, sizeBlock;
+double *A,*B,*C,*D,*L,*M,*O;
+sem_t sem_lABC, sem_bLBD;
+
 /* Time in seconds from some point in the past */
 double dwalltime();
 
 void producto(double *A,double *B,double *C, int r,int N,int sizeMatrix,int sizeBlock);
 void productoPorElemento(double *A,double b,double *C, int n);
-
+void * initialize (void * ptr);
+void * lA (void * ptr);
+void * BC (void * ptr);
+void * bL (void * ptr);
+void * BD (void * ptr);
 
 int main(int argc,char* argv[]){
 
- double *A,*B,*C,*D,*L,*M;
  int i,j,k,ids[NUM_THREADS];
- int b,l;
  pthread_attr_t attr;
  pthread_t threads[NUM_THREADS];
  double timetick;
 
- pthread_attr_init(&attr)
+ sem_init(&sem_lABC, 1, 0); 
+ sem_init(&sem_bLBD, 1, 0); 
+
+ pthread_attr_init(&attr);
  
  //Controla los argumentos al programa
  if (argc < 3){
@@ -58,87 +68,47 @@ int main(int argc,char* argv[]){
    return 0;
  }
 
- int N = atoi(argv[1]);
- int r = atoi(argv[2]);
+ N = atoi(argv[1]);
+ r = atoi(argv[2]);
 
- int n = N*r; //dimension de la matriz
- int sizeMatrix=n*n; //cantidad total de datos matriz
- int sizeBlock=r*r; //cantidad total de datos del bloque
- int sizeL = (n+1)*n/2;
+ n = N*r; //dimension de la matriz
+ sizeMatrix=n*n; //cantidad total de datos matriz
+ sizeBlock=r*r; //cantidad total de datos del bloque
+ sizeL = (n+1)*n/2;
 
- //Aloca memoria para las matrices
  A=(double*)malloc(sizeof(double)*sizeMatrix);
  B=(double*)malloc(sizeof(double)*sizeMatrix);
  C=(double*)malloc(sizeof(double)*sizeMatrix);
- D=(double*)malloc(sizeof(double)*sizeMatrix);
  L=(double*)malloc(sizeof(double)*sizeL);
  M=(double*)malloc(sizeof(double)*sizeMatrix);
+ D=(double*)malloc(sizeof(double)*sizeMatrix);
+ O=(double*)malloc(sizeof(double)*sizeMatrix);
 
- //Inicializa las matrices
- for(i=0;i<n;i++){
-  for(j=0;j<n;j++){
-
-   A[i*n+j]=rand()%10;
-   B[i*n+j]=rand()%10;
-   C[i*n+j]=rand()%10;
-   D[i*n+j]=rand()%10;
-
-   if(i>=j){
-    L[i+j+i*(i-1)/2]=n;
-   }
-
-   M[i*n+j]=0;	
-  }
+ for (i = 0; i < NUM_THREADS; i++){
+ 	ids[i] = i;
+ 	pthread_create(&threads[i], &attr, initialize, &ids[i]);
  }
 
- //inicializo b
- for(i=0; i<n; i++){
-  for(j=0; j<n; j++){
-   b += B[i*n+j];
-  }
- }
- b /= sizeMatrix;
-
- //inicializo l
- for(i=0; i<sizeL; i++){
-  l += L[i];
- }
- l /= sizeL;
+ for (i = 0; i<NUM_THREADS;i++)
+ 	pthread_join(threads[i], NULL);
 
  //Resuelve la expresion 𝑀 = 𝑙.𝐴𝐵𝐶 + 𝑏𝐿𝐵𝐷
  timetick = dwalltime();
 
  //𝑙.𝐴𝐵𝐶
- productoPorElemento(A,l,A,sizeMatrix);
- producto(A,B,M,r,N,sizeMatrix,sizeBlock);
- //volver a poner a 0 o crear nueva matriz y inicializar en 0
- for(i=0;i<sizeMatrix;i++){
- 	A[i]=0;
- }
- producto(M,C,A,r,N,sizeMatrix,sizeBlock);
- //volver a poner a 0 o crear nueva matriz y inicializar en 0
- for(i=0;i<sizeMatrix;i++){
- 	M[i]=0;
- }
+ pthread_create(&threads[0], &attr, lA, &ids[0]);
+ pthread_create(&threads[1], &attr, BC, &ids[1]);
 
  //𝑏𝐿𝐵𝐷
- productoPorElemento(L,b,L,sizeL);
- for(i=0;i<n;i++){
-  for(j=0;j<n;j++){
-   //aca cambio
-   for(k=n;k>=i;--k){
-    M[i*n+j]=M[i*n+j] + B[i*n+k]*L[k+j+k*(k-1)/2];
-   }
-  }
- }
- for(i=0;i<sizeMatrix;i++){
- 	B[i]=0;
- }
- producto(M,D,B,r,N,sizeMatrix,sizeBlock);
+ pthread_create(&threads[2], &attr, bL, &ids[2]);
+ pthread_create(&threads[3], &attr, BD, &ids[3]);
+
+ for (i = 0; i<4;i++)
+ 	pthread_join(threads[i], NULL);
 
  //𝑙.𝐴𝐵𝐶 + 𝑏𝐿𝐵𝐷
  for(i=0;i<sizeMatrix;i++){
-  M[i] = A[i]+B[i];
+  M[i] = C[i]+D[i];
  } 
 
  printf("Tiempo en segundos %f\n", dwalltime() - timetick);
@@ -185,6 +155,110 @@ void productoPorElemento(double *A,double b,double *C, int sizeMatrix){
  for(i=0;i<sizeMatrix;i++){
     C[i]= A[i]*b;
  }
+}
+
+void * lA (void * ptr){
+	int * p, i, id;
+	p = (int *) ptr;
+	id = *p;
+    productoPorElemento(A,l,A,sizeMatrix);
+    sem_wait(&sem_lABC);
+    for(i=0;i<sizeMatrix;i++){
+ 	  C[i]=0;
+    }
+    producto(M,A,C,r,N,sizeMatrix,sizeBlock);    
+    pthread_exit(0);
+}
+void * BC (void * ptr){
+	int * p, i, id;
+	p = (int *) ptr;
+	id = *p;
+    producto(B,C,M,r,N,sizeMatrix,sizeBlock);
+    sem_post(&sem_lABC);
+    pthread_exit(0);
+}
+void * bL (void * ptr){
+	int * p, i, j, k, id;
+	p = (int *) ptr;
+	id = *p;
+    productoPorElemento(L,b,L,sizeL);
+    sem_wait(&sem_bLBD);
+    for(i=0;i<sizeMatrix;i++){
+ 	  D[i]=0;
+    }
+	for(i=0;i<n;i++){
+	 for(j=0;j<n;j++){
+	   for(k=n;k>=i;--k){
+	    D[i*n+j]=D[i*n+j] + O[i*n+k]*L[k+j+k*(k-1)/2];
+	   }
+	 }
+    }
+    pthread_exit(0);
+}
+void * BD (void * ptr){
+	int * p, i, id;
+	p = (int *) ptr;
+	id = *p;
+    producto(B,D,O,r,N,sizeMatrix,sizeBlock);
+    sem_post(&sem_bLBD);
+    pthread_exit(0);
+}
+
+void * initialize (void * ptr){
+	int * p, i, id;
+	p = (int *) ptr;
+	id = *p;
+
+	switch(id) {
+
+	   case 0  :
+ 		  for(i=0;i<sizeMatrix;i++){
+		    A[i]=rand()%10;
+ 		  }
+	      break; /* optional */
+		
+	   case 1  :
+ 		  for(i=0;i<sizeMatrix;i++){
+		    B[i]=rand()%10;
+ 		  }
+		  //inicializo b
+		  for(i=0; i<sizeMatrix; i++){
+		    b += B[i];
+		  }
+		  b /= sizeMatrix;
+	      break; /* optional */
+
+	   case 2  :
+ 		  for(i=0;i<sizeMatrix;i++){
+		    C[i]=rand()%10;
+ 		  }
+	      break; /* optional */
+	  
+ 	   case 3  :
+		  for(i=0;i<sizeL;i++){
+		     L[i]=n;
+		  }
+		  //inicializo l
+		  for(i=0; i<sizeL; i++){
+		   l += L[i];
+		  }
+		  l /= sizeL;
+		  break;
+
+	   case 4  :
+ 		  for(i=0;i<sizeMatrix;i++){
+		    M[i]=0;
+		    O[i]=0;
+ 		  }
+	      break; /* optional */
+
+	   case 5  :
+ 		  for(i=0;i<sizeMatrix;i++){
+		    D[i]=rand()%10;
+ 		  }
+	      break; /* optional */
+	}
+    pthread_exit(0);
 }
 
 
