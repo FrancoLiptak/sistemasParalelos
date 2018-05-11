@@ -21,8 +21,9 @@ void productoPorElemento(double *A,double b,double *C, int n);
 int main(int argc,char* argv[]){
 
  double *A,*B,*C,*D,*L,*M;
- int i,j,k;
- int b,l;
+ int I,J,K,i,j,k;
+ int despA, despB, despC,desp;
+ double b,l;
  int check = 1;
  double timetick;
 
@@ -54,16 +55,16 @@ int main(int argc,char* argv[]){
  for(i=0;i<n;i++){
   for(j=0;j<n;j++){
 
-   A[i*n+j]=rand()%10;
-   B[i*n+j]=rand()%10;
-   C[i*n+j]=rand()%10;
-   D[i*n+j]=rand()%10;
+   A[i*n+j]=1;
+   B[i*n+j]=1;
+   C[i*n+j]=1;
+   D[i*n+j]=1;
 
    if(i>=j){
-    L[i+j+i*(i-1)/2]=n;
+    L[i+j+i*(i-1)/2]=1;
    }
 
-   M[i*n+j]=0;	
+   M[i*n+j]=0;
   }
  }
 
@@ -76,48 +77,150 @@ int main(int argc,char* argv[]){
  b /= sizeMatrix;
 
  //inicializo l
- for(i=0; i<sizeL; i++){
-  l += L[i];
+ for(i=0;i<n;i++){
+  for(j=0;j<=i;j++){
+    l += L[i+j+i*(i-1)/2];
+  }
  }
- l /= sizeL;
+ l /= sizeMatrix;
 
  //Resuelve la expresion 𝑀 = 𝑙.𝐴𝐵𝐶 + 𝑏𝐿𝐵𝐷
  timetick = dwalltime();
 
  //𝑙.𝐴𝐵𝐶
- productoPorElemento(A,l,A,sizeMatrix);
- producto(A,B,M,r,N,sizeMatrix,sizeBlock);
- //volver a poner a 0 o crear nueva matriz y inicializar en 0
- for(i=0;i<sizeMatrix;i++){
- 	A[i]=0;
+ //𝑙.𝐴 -> L
+ for(i=0; i<n; i++){
+  for(j=0; j<n; j++){
+    A[i*n+j]= A[i*n+j]*l;
+  }
  }
- producto(M,C,A,r,N,sizeMatrix,sizeBlock);
+ //l𝐴𝐵 -> M
+ for (I=0;I<N;I++){
+   for (J=0;J<N;J++){
+     despC = (I*N+J)*sizeBlock;
+     for (K=0;K<N;K++){
+       despA = (I*N+K)*sizeBlock;
+       despB = (K*N+J)*sizeBlock;
+       for (i=0;i<r;i++){
+         for (j=0;j<r;j++){
+           desp = despC + i*r+j;
+           for (k=0;k<r;k++){
+             M[desp] += A[despA + i*r+k]*B[despB + k*r+j]; 
+           };
+         }
+       };
+     };
+   };  
+ }; 
  //volver a poner a 0 o crear nueva matriz y inicializar en 0
- for(i=0;i<sizeMatrix;i++){
- 	M[i]=0;
+ for(i=0; i<n; i++){
+  for(j=0; j<n; j++){
+  	A[i*n+j]=0;
+  }
+ }
+ //lA𝐵𝐶 -> A
+ for (I=0;I<N;I++){
+   for (J=0;J<N;J++){
+     despC = (I*N+J)*sizeBlock;
+     for (K=0;K<N;K++){
+       despA = (I*N+K)*sizeBlock;
+       despB = (K*N+J)*sizeBlock;
+       for (i=0;i<r;i++){
+         for (j=0;j<r;j++){
+           desp = despC + i*r+j;
+           for (k=0;k<r;k++){
+             A[desp] += M[despA + i*r+k]*C[despB + k*r+j]; 
+           };
+         }
+       };
+     };
+   };  
+ }; 
+ //volver a poner a 0 o crear nueva matriz y inicializar en 0
+ for(i=0; i<n; i++){
+  for(j=0; j<n; j++){
+  	M[i*n+j]=0;
+  }
  }
 
  //𝑏𝐿𝐵𝐷
- productoPorElemento(L,b,L,sizeL);
+ //𝑏𝐿 -> L
+ for(i=0; i<n; i++){
+  for(j=0;j<=i;j++){
+    L[i+j+i*(i-1)/2]= L[i+j+i*(i-1)/2]*b;
+  }
+ }
+ //𝐿𝐵 -> M
  for(i=0;i<n;i++){
   for(j=0;j<n;j++){
-   //aca cambio
-   for(k=n;k>=i;--k){
-    M[i*n+j]=M[i*n+j] + B[i*n+k]*L[k+j+k*(k-1)/2];
+   for(k=0;k<=i;k++){
+    M[i*n+j]=M[i*n+j] + L[i+k+i*(i-1)/2] * B[j+k*n];
    }
   }
  }
- for(i=0;i<sizeMatrix;i++){
- 	B[i]=0;
+ for(i=0; i<n; i++){
+  for(j=0; j<n; j++){
+  	B[i*n+j]=0;
+  }
  }
- producto(M,D,B,r,N,sizeMatrix,sizeBlock);
+ //𝐵𝐷 -> B
+ for (I=0;I<N;I++){
+   for (J=0;J<N;J++){
+     despC = (I*N+J)*sizeBlock;
+     for (K=0;K<N;K++){
+       despA = (I*N+K)*sizeBlock;
+       despB = (K*N+J)*sizeBlock;
+       for (i=0;i<r;i++){
+         for (j=0;j<r;j++){
+           desp = despC + i*r+j;
+           for (k=0;k<r;k++){
+             B[desp] += M[despA + i*r+k]*D[despB + k*r+j]; 
+           };
+         }
+       };
+     };
+   };  
+ }; 
 
  //𝑙.𝐴𝐵𝐶 + 𝑏𝐿𝐵𝐷
- for(i=0;i<sizeMatrix;i++){
-  M[i] = A[i]+B[i];
- } 
+ for(i=0; i<n; i++){
+  for(j=0; j<n; j++){
+   M[i*n+j] = A[i*n+j]+B[i*n+j];
+  }
+ }
 
  printf("Tiempo en segundos %f\n", dwalltime() - timetick);
+
+  printf("Contenido de la matriz M: \n" );
+  for (I= 0; I< N; I++){
+    //para cada fila de bloques (I)
+    for (i= 0; i< r; i++){
+       for(J=0;J<N;J++){
+       despB=(I*N+J)*r*r;
+    for (j=0;j<r;j++){
+       printf("%f ",M[despB+ i*r+j]);
+  
+     };//end for j
+  };//end for J
+        printf("\n ");
+     };//end for i
+
+  };//end for I
+  printf(" \n\n");
+
+ //Verifica el resultado
+ for(i=0;i<n;i++){
+  for(j=0;j<n;j++){
+   check = check && (M[i*n+j]==(l*n*n+n*(i+1)));
+  }
+  printf("\n");
+ }
+
+ if(check){
+  printf("nancy/10\n");
+ }else{
+  printf("Re mal\n");
+ }
 
  free(A);
  free(B);
@@ -129,36 +232,6 @@ int main(int argc,char* argv[]){
  return(0);
 }
 
-//SOLO PARA MATRICES DE IGUAL DIMENSION DE BLOQUES (N)
-void producto(double *A,double *B,double *C, int r,int N,int sizeMatrix, int sizeBlock){
-   int I,J,K,i,j,k;
-   int despA, despB, despC,desp;
-
-	for (I=0;I<N;I++){
-		for (J=0;J<N;J++){
-			despC = (I*N+J)*sizeBlock;
-			for (K=0;K<N;K++){
-				despA = (I*N+K)*sizeBlock;
-				despB = (K*N+J)*sizeBlock;
-				for (i=0;i<r;i++){
-					for (j=0;j<r;j++){
-						desp = despC + i*r+j;
-						for (k=0;k<r;k++){
-							C[desp] += A[despA + i*r+k]*B[despB + k*r+j]; 
-						};
-					}
-				};
-			};
-		};	
-	}; 
-}
-
-void productoPorElemento(double *A,double b,double *C, int sizeMatrix){
- int i;
- for(i=0;i<sizeMatrix;i++){
-    C[i]= A[i]*b;
- }
-}
 
 
 /*****************************************************************/
