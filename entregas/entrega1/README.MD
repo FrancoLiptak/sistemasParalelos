@@ -17,6 +17,38 @@ Las pruebas se hicieron con el procesador AMD Phenom II X6 1100T Black Edition.
 *"Realizar un algoritmo Pthreads y otro OpenMP que resuelva la expresión: 𝑀 = 𝑙.𝐴𝐵𝐶 + 𝑏𝐿𝐵𝐷. Donde A, B, C y D son matrices de NxN. L matriz triangular inferior de NxN. 𝑏 y 𝑙 son los promedios de los valores de los elementos de las matrices B y L, respectivamente.
 Evaluar N=512, 1024 y 2048."*
 
+### Resolución secuencial
+
+Para poder ejecutar este ejercicio, el usuario debe ingresar la cantidad de bloques por lado, y la longitud de cada bloque. 
+
+Posteriormente se inicializan las variables necesarias y se aloca espacio para las distintas matrices. La idea será ahorrar espacio, por ende, las matrices se reutilizarán (será necesario inicializar algunas en 0 después de utilizarlas). Es importante aclarar que para la matriz triangular solo se reserva el espacio correspondiente al triangulo inferior, y por ende solo se inicializan dichas posiciones.
+
+Es importante aclarar que las operaciones en las matrices son por bloques, lo cual es más eficiente. Sin embargo, recordamos que la matriz triangular no está almacenada como una matriz cuadrada. Por ende, para dicha matriz trabajamos con "bloques triangulares". Para diferenciar los tipos de bloques servirá esta explicación:
+
+```
+Las matrices cuadradas tienen bloques "cuadrados", por ejemplo:
+
+1 1
+1 1
+
+Sin embargo, la matriz triangular puede tener bloques que no sigan esa forma. Básicamente puede tener:
+
+1 1
+1 1
+
+O también el bloque triangular:
+
+1 
+1 1
+
+También hay que tener en cuenta no intentar acceder a posiciones en la matriz triangular, que corresponderían a "cuadrados vacios" (no se les alocó espacio ni tampoco (obviamente) se los inicializó)
+
+```  
+
+### Resolución con Pthreads
+
+### Resolución con OpenMP
+
 ### Mediciones
 
 ##### Tiempo con un solo hilo en las soluciones con Pthreads y OpenMP:

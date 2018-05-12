@@ -8,7 +8,7 @@ int N = 2048; // Dimensión por defecto del arreglo
 int *vector;
 int pares = 0; // Cantidad de números pares
 int NUM_THREADS = 4;
-int elementos_por_thread = N / NUM_THREADS; // Cantidad de elementos que procesa cada thread
+int elementos_por_thread; // Cantidad de elementos que procesa cada thread
 pthread_mutex_t mutex;
 
 // Para calcular tiempo
@@ -66,7 +66,7 @@ int main(int argc,char*argv[]){
     //Crea los threads 
     for(i = 0; i < NUM_THREADS ; i++){
         id_threads[i]=i;
-        pthread_create(&threads[i], NULL, contador_pares, &id_threads[i]);
+        pthread_create(&threads[i], NULL, &contador_pares, &id_threads[i]);
     }
  
     // El hilo llamador espera a que todos terminen de buscar la cantidad de pares en su sub-arreglo.
