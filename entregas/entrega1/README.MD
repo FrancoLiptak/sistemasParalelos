@@ -65,7 +65,9 @@ Para esta solución utilizaremos funciones para la suma (`suma`), el producto en
 Dado que las funciones son generales, se requiere un metodo para poder pasarle las variables sobre las que va a trabajar, para esto usamos `struct` lo cual nos permite pasarle multiples variables de diferentes tipos a las funciones. De esta forma es posible pasarle a las funciones su id y las matrices sobre las que va a trabajar (se pasan los punteros y trabaja sobre la variable global). Utilizamos 3 `struct`: 
 
 -`arg_struct`: Se utiliza en la multiplicacion de matrices y matrices triangulares, posee un `int` para pasar la id del hilo y tres argumentos más para pasar, siendo C = A*B, A en `arg1`, B en `arg2` y C en `arg3`.
+
 -`arg_struct_element`: Se utiliza en la multiplicacion de una matriz por un elemento, posee un `int` para pasar la id del hilo y tres argumentos más para pasar, siendo C = a*B, a en `arg1`, B en `arg2` y C en `arg3`.
+
 -`arg_struct_zero`: Se utiliza para inicializar una matriz con todos sus elementos en 0, posee un `int` para pasar la id del hilo y otro argumento para pasar la matriz que se inicializara con todos sus elementos en 0 (`arg1`).
 
 ### Resolución con OpenMP
