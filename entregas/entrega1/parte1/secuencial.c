@@ -341,10 +341,8 @@ int main(int argc,char* argv[]){
   };//end for J
         printf("\n ");
      };//end for i
-
   };//end for I
   printf(" \n\n");
-
   printf("%f \n",l);
   printf("Contenido de la matriz 𝑏𝐿𝐵𝐷: \n" );
   for (I= 0; I< N; I++){
@@ -359,10 +357,8 @@ int main(int argc,char* argv[]){
         };//end for J
         printf("\n ");
     };//end for i
-
   };//end for I
   printf(" \n\n");
-
   printf("Contenido de la matriz M: \n" );
   for (I= 0; I< N; I++){
     //para cada fila de bloques (I)
@@ -376,7 +372,6 @@ int main(int argc,char* argv[]){
   };//end for J
         printf("\n ");
      };//end for i
-
   };//end for I
   printf(" \n\n");
 
@@ -426,4 +421,3 @@ double dwalltime()
 	sec = tv.tv_sec + tv.tv_usec/1000000.0;
 	return sec;
 }
-
