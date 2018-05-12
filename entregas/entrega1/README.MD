@@ -12,7 +12,10 @@ Nuestros usuarios de GitHub son:
 
 ## Ejercicio 1
 
-## Mediciones
+*"Realizar un algoritmo Pthreads y otro OpenMP que resuelva la expresión: 𝑀 = 𝑙.𝐴𝐵𝐶 + 𝑏𝐿𝐵𝐷. Donde A, B, C y D son matrices de NxN. L matriz triangular inferior de NxN. 𝑏 y 𝑙 son los promedios de los valores de los elementos de las matrices B y L, respectivamente
+Evaluar N=512, 1024 y 2048."*
+
+### Mediciones
 
 ##### Tiempo con un solo hilo en las soluciones con Pthreads y OpenMP:
 
@@ -74,7 +77,7 @@ Al momento de contar la cantidad de números pares, simplemente agregamos la sig
 
 Con eso terminan las diferencias respecto a la solución secuencial.
 
-## Mediciones
+### Mediciones
 
 ##### Tiempo con un solo hilo en las soluciones con Pthreads y OpenMP:
 
