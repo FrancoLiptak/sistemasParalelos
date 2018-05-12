@@ -23,7 +23,7 @@ Para poder ejecutar este ejercicio, el usuario debe ingresar la cantidad de bloq
 
 Posteriormente se inicializan las variables necesarias y se aloca espacio para las distintas matrices. La idea será ahorrar espacio, por ende, las matrices se reutilizarán (será necesario inicializar algunas en 0 después de utilizarlas). Es importante aclarar que para la matriz triangular solo se reserva el espacio correspondiente al triangulo inferior, y por ende solo se inicializan dichas posiciones.
 
-Es importante aclarar que las operaciones en las matrices son por bloques, lo cual es más eficiente. Sin embargo, recordamos que la matriz triangular no está almacenada como una matriz cuadrada. Por ende, para dicha matriz trabajamos con "bloques triangulares". Para diferenciar los tipos de bloques servirá esta explicación:
+Las operaciones en las matrices son por bloques, lo cual es más eficiente. Sin embargo, recordamos que la matriz triangular no está almacenada como una matriz cuadrada. Por ende, para dicha matriz trabajamos con "bloques triangulares". Para diferenciar los tipos de bloques servirá esta explicación:
 
 ```
 Las matrices cuadradas tienen bloques "cuadrados", por ejemplo:
