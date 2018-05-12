@@ -30,7 +30,7 @@ int main(int argc,char*argv[]){
         exit(1);
     }
 
-    omp_set_num_threads(NUM_THREADS);
+    omp_set_num_threads(NUM_THREADS); // Seteamos el número de Threads
 
     // Alocación de memoria, e inicializiación del vector
     vector = (int*)malloc(sizeof(int)*N);
