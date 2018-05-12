@@ -23,6 +23,8 @@ Para poder ejecutar este ejercicio, el usuario debe ingresar la cantidad de bloq
 
 Posteriormente se inicializan las variables necesarias y se aloca espacio para las distintas matrices. La idea será ahorrar espacio, por ende, las matrices se reutilizarán (será necesario inicializar algunas en 0 después de utilizarlas). Es importante aclarar que para la matriz triangular solo se reserva el espacio correspondiente al triangulo inferior, y por ende solo se inicializan dichas posiciones.
 
+Luego de terminar la inicialización, comenzamos a controlar el tiempo.
+
 Las operaciones en las matrices son por bloques, lo cual es más eficiente. Sin embargo, recordamos que la matriz triangular no está almacenada como una matriz cuadrada. Por ende, para dicha matriz trabajamos con "bloques triangulares". Para diferenciar los tipos de bloques servirá esta explicación:
 
 ```
@@ -41,9 +43,16 @@ O también el bloque triangular:
 1 
 1 1
 
-También hay que tener en cuenta no intentar acceder a posiciones en la matriz triangular, que corresponderían a "cuadrados vacios" (no se les alocó espacio ni tampoco (obviamente) se los inicializó)
-
+Y por último, también hay que tener en cuenta no intentar acceder a posiciones en la matriz triangular, que corresponderían a "cuadrados vacios" (no se les alocó espacio ni tampoco (obviamente) se los inicializó)
 ```  
+
+Una vez entendido eso, trabajamos con 'bloques cuadrados' siempre, a menos que estemos trabajando con la matriz triangular.
+
+Realizamos las multiplicaciones solicitadas por el enunciado de izquierda a derecha, y separando en términos. Una vez que se tiene el resultado del primer término y el resultado del segundo término, se realiza la suma, guardando finalmente en M el resultado.
+
+Luego informamos el tiempo y verificamos el resultado (informamos si el resultado es correcto o no). 
+
+Finalmente liberamos el espacio ocupado y termina nuestra solución.
 
 ### Resolución con Pthreads
 
