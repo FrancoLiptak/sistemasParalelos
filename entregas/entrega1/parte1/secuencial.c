@@ -15,9 +15,6 @@ Evaluar N=512, 1024 y 2048.
 /* Time in seconds from some point in the past */
 double dwalltime();
 
-void producto(double *A,double *B,double *C, int r,int N,int sizeMatrix,int sizeBlock);
-void productoPorElemento(double *A,double b,double *C, int n);
-
 int main(int argc,char* argv[]){
 
  double *A,*B,*C,*D,*L,*M;
@@ -42,6 +39,7 @@ int main(int argc,char* argv[]){
  int sizeMatrix=n*n; //cantidad total de datos matriz
  int sizeBlock=r*r; //cantidad total de datos del bloque
  int sizeL = (n+1)*n/2;
+ int sizeTriangularBlock = (r+1)*r/2;
 
  //Aloca memoria para las matrices
  A=(double*)malloc(sizeof(double)*sizeMatrix);
@@ -51,49 +49,91 @@ int main(int argc,char* argv[]){
  L=(double*)malloc(sizeof(double)*sizeL);
  M=(double*)malloc(sizeof(double)*sizeMatrix);
 
- //Inicializa las matrices
- for(i=0;i<n;i++){
-  for(j=0;j<n;j++){
-
-   A[i*n+j]=1;
-   B[i*n+j]=1;
-   C[i*n+j]=1;
-   D[i*n+j]=1;
-
-   if(i>=j){
-    L[i+j+i*(i-1)/2]=1;
-   }
-
-   M[i*n+j]=0;
-  }
- }
+  despA = 0;
+  for (I= 0; I< N; I++){
+    //para cada fila de bloques (I)
+    for(J=0;J<N;J++){
+      if(I>=1)
+        despA = I*sizeTriangularBlock+(I-1+J)*sizeBlock;
+      despB=(I*N+J)*r*r;
+      for (i= 0; i< r; i++){
+        for (j=0;j<r;j++){
+          A[despB+ i*r+j]=1;
+          B[despB+ i*r+j]=1;
+          C[despB+ i*r+j]=1;
+          D[despB+ i*r+j]=1;
+          M[despB+ i*r+j]=0;
+          if(J<=I){
+            if(I==J){
+              if(i>=j){
+                L[despA+ i+j+i*(i-1)/2]=1;
+              }            
+            }else{
+              L[despA+ i*r+j]=1;            
+            }
+          }
+        };//end for j
+      };//end for J
+    };//end for i
+  };//end for I
 
  //inicializo b
- for(i=0; i<n; i++){
-  for(j=0; j<n; j++){
-   b += B[i*n+j];
-  }
- }
- b /= sizeMatrix;
+  for (I= 0; I< N; I++){
+    //para cada fila de bloques (I)
+    for(J=0;J<N;J++){
+      despB=(I*N+J)*r*r;
+      for (i= 0; i< r; i++){
+        for (j=0;j<r;j++){
+          b += B[despB+ i*r+j];
+        };//end for j
+      };//end for J
+    };//end for i
+  };//end for I
+  b /= sizeMatrix;
 
  //inicializo l
- for(i=0;i<n;i++){
-  for(j=0;j<=i;j++){
-    l += L[i+j+i*(i-1)/2];
-  }
- }
- l /= sizeMatrix;
+  despA = 0;
+  for (I= 0; I< N; I++){
+    //para cada fila de bloques (I)
+    for(J=0;J<=I;J++){
+      if(I>=1)
+        despA = I*sizeTriangularBlock+(I-1+J)*sizeBlock;
+      for (i= 0; i< r; i++){
+        for (j=0;j<r;j++){
+          if(I==J){
+            if(i>=j){
+              l += L[despA+ i+j+i*(i-1)/2];
+            }            
+          }else{
+            l += L[despA+ i*r+j];            
+          }
+        };//end for j
+      };//end for J
+    };//end for i
+  };//end for I
+  l /= sizeMatrix;
 
  //Resuelve la expresion 𝑀 = 𝑙.𝐴𝐵𝐶 + 𝑏𝐿𝐵𝐷
  timetick = dwalltime();
 
  //𝑙.𝐴𝐵𝐶
  //𝑙.𝐴 -> L
- for(i=0; i<n; i++){
-  for(j=0; j<n; j++){
-    A[i*n+j]= A[i*n+j]*l;
+  for (i= 0; i<sizeMatrix; i++){
+    A[i] *= l;
   }
- }
+/*
+  for (I= 0; I< N; I++){
+    //para cada fila de bloques (I)
+    for(J=0;J<N;J++){
+      despB=(I*N+J)*r*r;
+      for (i= 0; i< r; i++){
+        for (j=0;j<r;j++){
+          A[despB+ i*r+j]= A[despB+ i*r+j]*l;
+        };//end for j
+      };//end for J
+    };//end for i
+  };//end for I
+*/
  //l𝐴𝐵 -> M
  for (I=0;I<N;I++){
    for (J=0;J<N;J++){
@@ -112,12 +152,27 @@ int main(int argc,char* argv[]){
      };
    };  
  }; 
+
  //volver a poner a 0 o crear nueva matriz y inicializar en 0
- for(i=0; i<n; i++){
-  for(j=0; j<n; j++){
-  	A[i*n+j]=0;
+  
+  for (i= 0; i<sizeMatrix; i++){
+    A[i]= 0;
   }
- }
+
+/*
+  for (I= 0; I< N; I++){
+    //para cada fila de bloques (I)
+    for(J=0;J<N;J++){
+      despB=(I*N+J)*r*r;
+      for (i= 0; i< r; i++){
+        for (j=0;j<r;j++){
+          A[despB+ i*r+j]= 0;
+        };//end for j
+      };//end for J
+    };//end for i
+  };//end for I
+*/
+
  //lA𝐵𝐶 -> A
  for (I=0;I<N;I++){
    for (J=0;J<N;J++){
@@ -136,33 +191,92 @@ int main(int argc,char* argv[]){
      };
    };  
  }; 
+
  //volver a poner a 0 o crear nueva matriz y inicializar en 0
- for(i=0; i<n; i++){
-  for(j=0; j<n; j++){
-  	M[i*n+j]=0;
+  for (i= 0; i<sizeMatrix; i++){
+    M[i]= 0;
   }
- }
+/*
+  for (I= 0; I< N; I++){
+    //para cada fila de bloques (I)
+    for(J=0;J<N;J++){
+      despB=(I*N+J)*r*r;
+      for (i= 0; i< r; i++){
+        for (j=0;j<r;j++){
+          M[despB+ i*r+j]= 0;
+        };//end for j
+      };//end for J
+    };//end for i
+  };//end for I
+*/
 
  //𝑏𝐿𝐵𝐷
  //𝑏𝐿 -> L
- for(i=0; i<n; i++){
-  for(j=0;j<=i;j++){
-    L[i+j+i*(i-1)/2]= L[i+j+i*(i-1)/2]*b;
-  }
- }
+  despA = 0;
+  for (I= 0; I< N; I++){
+    //para cada fila de bloques (I)
+    for(J=0;J<N;J++){
+      if(I>=1)
+        despA = I*sizeTriangularBlock+(I-1+J)*sizeBlock;
+      for (i= 0; i< r; i++){
+        for (j=0;j<r;j++){
+          if(I==J){
+            if(i>=j){
+              L[despA+ i+j+i*(i-1)/2] = L[despA+ i+j+i*(i-1)/2] * b;
+            }            
+          }else{
+            L[despA+ i*r+j] = L[despA+ i*r+j] * b;            
+          }
+        };//end for j
+      };//end for J
+    };//end for i
+  };//end for I
+
  //𝐿𝐵 -> M
- for(i=0;i<n;i++){
-  for(j=0;j<n;j++){
-   for(k=0;k<=i;k++){
-    M[i*n+j]=M[i*n+j] + L[i+k+i*(i-1)/2] * B[j+k*n];
-   }
+ for (I=0;I<N;I++){
+   for (J=0;J<N;J++){
+     despC = (I*N+J)*sizeBlock;
+     despA = 0;
+     for (K=0;K<=I;K++){
+       if(I>=1){
+        despA = I*sizeTriangularBlock+(I-1+K)*sizeBlock;
+       }
+       despB = (K*N+J)*sizeBlock;
+       for (i=0;i<r;i++){
+         for (j=0;j<r;j++){
+           desp = despC + i*r+j;
+            if(I==K){
+             for(k=0;k<=i;k++){
+               M[desp] += L[despA + i+k+i*(i-1)/2] * B[despB + k*r+j];
+             };
+            }else{
+             for (k=0;k<r;k++){
+               M[desp] += L[despA + i*r+k] * B[despB + k*r+j];
+             };            
+            }
+         }
+       };
+     };
+   };  
+ }; 
+
+  for (i= 0; i<sizeMatrix; i++){
+    B[i]= 0;
   }
- }
- for(i=0; i<n; i++){
-  for(j=0; j<n; j++){
-  	B[i*n+j]=0;
-  }
- }
+/*
+  for (I= 0; I< N; I++){
+    //para cada fila de bloques (I)
+    for(J=0;J<N;J++){
+      despB=(I*N+J)*r*r;
+      for (i= 0; i< r; i++){
+        for (j=0;j<r;j++){
+          B[despB+ i*r+j]= 0;
+        };//end for j
+      };//end for J
+    };//end for i
+  };//end for I
+*/
+
  //𝐵𝐷 -> B
  for (I=0;I<N;I++){
    for (J=0;J<N;J++){
@@ -182,14 +296,63 @@ int main(int argc,char* argv[]){
    };  
  }; 
 
- //𝑙.𝐴𝐵𝐶 + 𝑏𝐿𝐵𝐷
- for(i=0; i<n; i++){
-  for(j=0; j<n; j++){
-   M[i*n+j] = A[i*n+j]+B[i*n+j];
-  }
- }
+
 
  printf("Tiempo en segundos %f\n", dwalltime() - timetick);
+
+ //𝑙.𝐴𝐵𝐶 + 𝑏𝐿𝐵𝐷
+  for (i= 0; i<sizeMatrix; i++){
+    M[i] = A[i] + B[i];
+  }
+/*
+  for (I= 0; I< N; I++){
+    //para cada fila de bloques (I)
+    for(J=0;J<N;J++){
+      despB=(I*N+J)*r*r;
+      for (i= 0; i< r; i++){
+        for (j=0;j<r;j++){
+          M[despB+ i*r+j] = A[despB+ i*r+j] + B[despB+ i*r+j];
+        };//end for j
+      };//end for J
+    };//end for i
+  };//end for I
+*/
+
+/* para imprimir matrices sacar el comentario
+  printf("Contenido de la matriz lA𝐵𝐶: \n" );
+  for (I= 0; I< N; I++){
+    //para cada fila de bloques (I)
+    for (i= 0; i< r; i++){
+       for(J=0;J<N;J++){
+       despB=(I*N+J)*r*r;
+    for (j=0;j<r;j++){
+       printf("%f ",A[despB+ i*r+j]);
+  
+     };//end for j
+  };//end for J
+        printf("\n ");
+     };//end for i
+
+  };//end for I
+  printf(" \n\n");
+
+  printf("%f \n",l);
+  printf("Contenido de la matriz 𝑏𝐿𝐵𝐷: \n" );
+  for (I= 0; I< N; I++){
+    //para cada fila de bloques (I)
+    for (i= 0; i< r; i++){
+       for(J=0;J<N;J++){
+          despB=(I*N+J)*r*r;
+          for (j=0;j<r;j++){
+             printf("%f ",B[despB+ i*r+j]);
+        
+           };//end for j
+        };//end for J
+        printf("\n ");
+    };//end for i
+
+  };//end for I
+  printf(" \n\n");
 
   printf("Contenido de la matriz M: \n" );
   for (I= 0; I< N; I++){
@@ -207,14 +370,21 @@ int main(int argc,char* argv[]){
 
   };//end for I
   printf(" \n\n");
+*/
 
  //Verifica el resultado
- for(i=0;i<n;i++){
-  for(j=0;j<n;j++){
-   check = check && (M[i*n+j]==(l*n*n+n*(i+1)));
-  }
-  printf("\n");
- }
+  for (I= 0; I< N; I++){
+    //para cada fila de bloques (I)
+    for (i= 0; i< r; i++){
+      for(J=0;J<N;J++){
+        despB=(I*N+J)*r*r;
+        for (j=0;j<r;j++){
+          check = check && (M[despB+ i*r+j]==(l*n*n+n*(I*r+i+1)));
+        };//end for j
+      };//end for J
+    };//end for i
+
+  };//end for I
 
  if(check){
   printf("nancy/10\n");
