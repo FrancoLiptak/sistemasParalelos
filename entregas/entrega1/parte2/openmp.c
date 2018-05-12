@@ -1,11 +1,13 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<sys/time.h>
+#include <omp.h>
 
 // Declaraciones de variables
 int N = 2048; // Dimensión por defecto del arreglo
 int *vector;
 int pares = 0; // Cantidad de números pares
+int NUM_THREADS = 4;
 
 // Para calcular tiempo
 double dwalltime(){
@@ -23,10 +25,12 @@ int main(int argc,char*argv[]){
     int i;
 
     //Controla los argumentos al programa
-    if ((argc != 2) || ((N = atoi(argv[1])) <= 0) ){
-        printf("Debe ingresar la longitud del arreglo. \n");
+    if ((argc != 3) || ((N = atoi(argv[1])) <= 0) || ((NUM_THREADS = atoi(argv[2])) <= 0)){
+        printf("Debe ingresar la longitud del arreglo y la cantidad de threads. \n");
         exit(1);
     }
+
+    omp_set_num_threads(NUM_THREADS);
 
     // Alocación de memoria, e inicializiación del vector
     vector = (int*)malloc(sizeof(int)*N);
@@ -37,6 +41,7 @@ int main(int argc,char*argv[]){
     timetick = dwalltime(); // Empieza a contar el tiempo
 
     // Cuenta la cantidad de números pares
+    #pragma omp parallel for reduction(+:pares)
     for(i=0; i<N; i++){
         if(vector[i] % 2 == 0) pares++;
     }
