@@ -8,6 +8,7 @@ int N = 2048; // Dimensión por defecto del arreglo
 int *vector;
 int pares = 0; // Cantidad de números pares
 int NUM_THREADS = 4;
+int elementos_por_thread = N / NUM_THREADS; // Cantidad de elementos que procesa cada thread
 pthread_mutex_t mutex;
 
 // Para calcular tiempo
@@ -24,7 +25,6 @@ double dwalltime(){
 void * contador_pares(void * arg){
     int i;
     int cant_pares_local = 0;
-    int elementos_por_thread = N / NUM_THREADS; // Cantidad de elementos que procesa cada thread
     int id_thread = * (int *) arg;
     int base =  elementos_por_thread * id_thread;
     int limite = elementos_por_thread * (id_thread+1); 
@@ -52,6 +52,7 @@ int main(int argc,char*argv[]){
 
     pthread_t threads[NUM_THREADS];
     int i, id_threads[NUM_THREADS];
+    elementos_por_thread = N / NUM_THREADS;
 
     // Alocación de memoria, e inicializiación del vector
     vector = (int*)malloc(sizeof(int)*N);
