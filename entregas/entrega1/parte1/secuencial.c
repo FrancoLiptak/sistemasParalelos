@@ -32,14 +32,16 @@ int main(int argc,char* argv[]){
    return 0;
  }
 
+//cantidad de bloques
  int N = atoi(argv[1]);
+//tamaño de bloques
  int r = atoi(argv[2]);
 
  int n = N*r; //dimension de la matriz
  int sizeMatrix=n*n; //cantidad total de datos matriz
  int sizeBlock=r*r; //cantidad total de datos del bloque
  int sizeL = (n+1)*n/2;
- int sizeTriangularBlock = (r+1)*r/2;
+ int sizeTriangularBlock = (r+1)*r/2; //tamaño de bloque triangular
 
  //Aloca memoria para las matrices
  A=(double*)malloc(sizeof(double)*sizeMatrix);
@@ -49,13 +51,17 @@ int main(int argc,char* argv[]){
  L=(double*)malloc(sizeof(double)*sizeL);
  M=(double*)malloc(sizeof(double)*sizeMatrix);
 
+  //inicializacion de matrices
   despA = 0;
   for (I= 0; I< N; I++){
     //para cada fila de bloques (I)
     for(J=0;J<N;J++){
       if(I>=1)
+        //para moverse en bloques de L
         despA = I*sizeTriangularBlock+(I-1+J)*sizeBlock;
+      //para moverse en bloques de otros
       despB=(I*N+J)*r*r;
+      //adentro del bloque
       for (i= 0; i< r; i++){
         for (j=0;j<r;j++){
           A[despB+ i*r+j]=1;
@@ -63,6 +69,7 @@ int main(int argc,char* argv[]){
           C[despB+ i*r+j]=1;
           D[despB+ i*r+j]=1;
           M[despB+ i*r+j]=0;
+          //para no llegar a bloques con 0
           if(J<=I){
             if(I==J){
               if(i>=j){
@@ -237,6 +244,7 @@ int main(int argc,char* argv[]){
    for (J=0;J<N;J++){
      despC = (I*N+J)*sizeBlock;
      despA = 0;
+     //para no ir a bloques vacios K<=I
      for (K=0;K<=I;K++){
        if(I>=1){
         despA = I*sizeTriangularBlock+(I-1+K)*sizeBlock;
@@ -244,7 +252,8 @@ int main(int argc,char* argv[]){
        despB = (K*N+J)*sizeBlock;
        for (i=0;i<r;i++){
          for (j=0;j<r;j++){
-           desp = despC + i*r+j;
+            //donde se para para ir guardando
+            desp = despC + i*r+j;
             if(I==K){
              for(k=0;k<=i;k++){
                M[desp] += L[despA + i+k+i*(i-1)/2] * B[despB + k*r+j];
