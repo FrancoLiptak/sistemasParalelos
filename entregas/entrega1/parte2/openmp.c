@@ -32,9 +32,8 @@ int main(int argc,char*argv[]){
 
     omp_set_num_threads(NUM_THREADS);
 
-    // Alocación de memoria, e inicialziación del vector
+    // Alocación de memoria, e inicializiación del vector
     vector = (int*)malloc(sizeof(int)*N);
-
     for(i=0; i<N; i++){
         vector[i] = i;
     }
