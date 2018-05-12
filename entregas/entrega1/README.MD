@@ -58,7 +58,7 @@ Finalmente liberamos el espacio ocupado y termina nuestra solución.
 
 ### Resolución con OpenMP
 
-La solución con Pthreads se basa en nuestra solución secuencial y por ende, se pasa a explicar sus diferencias.
+La solución con OpenMP se basa en nuestra solución secuencial y por ende, se pasa a explicar sus diferencias.
 
 El usuario deberá ingresar, además de la cantidad de bloques por lado y la longitud de cada bloque, el número de hilos con el que quiere trabajar. Recordar que trabajamos con potencias de dos.
 
