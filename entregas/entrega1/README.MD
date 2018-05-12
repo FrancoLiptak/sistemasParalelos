@@ -17,6 +17,57 @@ Las pruebas se hicieron con el procesador AMD Phenom II X6 1100T Black Edition.
 *"Realizar un algoritmo Pthreads y otro OpenMP que resuelva la expresión: 𝑀 = 𝑙.𝐴𝐵𝐶 + 𝑏𝐿𝐵𝐷. Donde A, B, C y D son matrices de NxN. L matriz triangular inferior de NxN. 𝑏 y 𝑙 son los promedios de los valores de los elementos de las matrices B y L, respectivamente.
 Evaluar N=512, 1024 y 2048."*
 
+### Resolución secuencial
+
+Para poder ejecutar este ejercicio, el usuario debe ingresar la cantidad de bloques por lado, y la longitud de cada bloque. 
+
+Posteriormente se inicializan las variables necesarias y se aloca espacio para las distintas matrices. La idea será ahorrar espacio, por ende, las matrices se reutilizarán (será necesario inicializar algunas en 0 después de utilizarlas). Es importante aclarar que para la matriz triangular solo se reserva el espacio correspondiente al triangulo inferior, y por ende solo se inicializan dichas posiciones.
+
+Luego de terminar la inicialización, comenzamos a controlar el tiempo.
+
+Las operaciones en las matrices son por bloques, lo cual es más eficiente. Sin embargo, recordamos que la matriz triangular no está almacenada como una matriz cuadrada. Por ende, para dicha matriz trabajamos con "bloques triangulares". Para diferenciar los tipos de bloques servirá esta explicación:
+
+```
+Las matrices cuadradas tienen bloques "cuadrados", por ejemplo:
+
+1 1
+1 1
+
+Sin embargo, la matriz triangular puede tener bloques que no sigan esa forma. Básicamente puede tener:
+
+1 1
+1 1
+
+O también el bloque triangular:
+
+1 
+1 1
+
+Y por último, también hay que tener en cuenta no intentar acceder a posiciones en la matriz triangular, que corresponderían a "cuadrados vacios" (no se les alocó espacio ni tampoco (obviamente) se los inicializó)
+```  
+
+Una vez entendido eso, trabajamos con 'bloques cuadrados' siempre, a menos que estemos trabajando con la matriz triangular.
+
+Realizamos las multiplicaciones solicitadas por el enunciado de izquierda a derecha, y separando en términos. Una vez que se tiene el resultado del primer término y el resultado del segundo término, se realiza la suma, guardando finalmente en M el resultado.
+
+Luego informamos el tiempo y verificamos el resultado (informamos si el resultado es correcto o no). 
+
+Finalmente liberamos el espacio ocupado y termina nuestra solución.
+
+### Resolución con Pthreads
+
+### Resolución con OpenMP
+
+La solución con Pthreads se basa en nuestra solución secuencial y por ende, se pasa a explicar sus diferencias.
+
+El usuario deberá ingresar, además de la cantidad de bloques por lado y la longitud de cada bloque, el número de hilos con el que quiere trabajar. Recordar que trabajamos con potencias de dos.
+
+Utilizamos la instrucción `#pragma omp parallel` con el fin de paralelizar distintas partes del código. Las partes puntualmente son: resolución del primer término, resolución del segundo término y la suma de los resultados de los otros términos. La cantidad de hilos a utilizar es la cantidad total, es decir, la ingresada por el usuario (que fue configurada con `omp_set_num_threads(NUM_THREADS);`).
+
+Luego de esta primera gran división en partes de la resolución del problema, cada una de las operaciones (que recordemos, se resuelven con `for`) cuenta con un encabezado `#pragma omp for`, el cual indica que se va a paralelizar la ejecución de un `for`. Además, se ponen como privadas variables que serán utilizadas por todos los hilos, con el fin de que un hilo no vea las modificaciones hechas por otro, y no haya conflicto entre sus procesamientos. Por último, también se utiliza la claúsula `collapse(N)`, la cual nos garantiza el uso de Threads para los valores I y J, utilizados en los `for` "mas de afuera", los cuales son utilizados para elegir el bloque a computar por cada hilo.
+
+No hay mas diferencias con la solución secuencial.
+
 ### Mediciones
 
 ##### Tiempo con un solo hilo en las soluciones con Pthreads y OpenMP:
@@ -73,8 +124,8 @@ El usuario deberá ingresar, además de la longitud del vector con el cual desea
 
 Al momento de contar la cantidad de números pares, simplemente agregamos la siguiente linea de código: ` #pragma omp parallel for reduction(+:pares) `, la cual se explica a continuación:
 
-- `parallel`: especifica que el bloque de código será ejecutado en paralelo. Cada hilo tendrá un ID único. Finalizada la región paralela, solo el hilo master continúa con la ejecución.
-- `for`: indica que se va a paralelizar la ejecución de un 'for'. En nuestro caso, recordar que el recorrido del vector se realiza con este iterador.
+- `parallel`: especifica que el bloque de código será ejecutado en paralelo. Cada hilo tendrá un ID único. Finalizada la región paralela, solo el hilo master continúa con la ejecución. La cantidad de hilos a utilizar es la cantidad total, es decir, la ingresada por el usuario (que fue configurada con `omp_set_num_threads(NUM_THREADS);`).
+- `for`: indica que se va a paralelizar la ejecución de un `for`. En nuestro caso, recordar que el recorrido del vector se realiza con este iterador.
 - `reduction(+:pares)`: en nuestro caso, indica a cada hilo que se debe realizar una suma sobre la variable indicada.
 
 Con eso terminan las diferencias respecto a la solución secuencial.

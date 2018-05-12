@@ -25,7 +25,7 @@ int main(int argc,char* argv[]){
     double timetick;
     int N = 2; // Cantidad de bloques
     int r = 256; // Tamaño de cada bloque
-    int NUM_THREADS = 4; // Número de threads por defecto
+    int NUM_THREADS = 4; // Número de threads por defecto (Recordar que trabajamos con potencias de dos)
 
     // Controla los argumentos al programa
     if ((argc != 4) || ((N = atoi(argv[1])) <= 0) || ((r = atoi(argv[2])) <= 0) || ((NUM_THREADS = atoi(argv[3])) <= 0)){
@@ -33,7 +33,7 @@ int main(int argc,char* argv[]){
         exit(1);
     }
 
-    omp_set_num_threads(NUM_THREADS); // Seteamos el número de Threads (Recordar que trabajamos con potencias de dos)
+    omp_set_num_threads(NUM_THREADS); // Seteamos el número de Threads
     int n = N*r; // Cantidad de celdas por lado de la matriz
     int sizeMatrix = n*n; // Cantidad total de datos matriz
     int sizeBlock = r*r; // Cantidad total de datos del bloque
@@ -121,187 +121,200 @@ int main(int argc,char* argv[]){
 
     // Comenzamos con el primer término: 𝑙.𝐴𝐵𝐶
 
-    // Calculamos 𝑙.𝐴 y lo guardamos en A
-    #pragma omp parallel for private(despB, i, j) // La idea es que el for de adentro sea todo privado, de manera que cada uno pueda recorrer distintos bloques
-    for (I= 0; I< N; I++){
-        for(J=0;J<N;J++){
-            despB=(I*N+J)*r*r;
-            for (i= 0; i< r; i++){
-                for (j=0;j<r;j++){
-                    A[despB+ i*r+j]= A[despB+ i*r+j]*l;
-                };
-            };
-        };
-    };
- 
-    // Calculamos l𝐴𝐵 y lo guardamos en M
-    #pragma omp parallel for private(despA, despB, despC, desp, K, k, i, j) // DUDA
-    for (I=0;I<N;I++){
-        for (J=0;J<N;J++){
-            despC = (I*N+J)*sizeBlock;
-            for (K=0;K<N;K++){
-                despA = (I*N+K)*sizeBlock;
-                despB = (K*N+J)*sizeBlock;
-                for (i=0;i<r;i++){
+    #pragma omp parallel
+    {
+        // Calculamos 𝑙.𝐴 y lo guardamos en A
+
+        #pragma omp for private(despB, i, j) collapse(2) // La idea es que el for de adentro sea todo privado, de manera que cada uno pueda recorrer distintos bloques
+        for (I= 0; I< N; I++){
+            for(J=0;J<N;J++){
+                despB=(I*N+J)*r*r;
+                for (i= 0; i< r; i++){
                     for (j=0;j<r;j++){
-                        desp = despC + i*r+j;
-                        for (k=0;k<r;k++){
-                            M[desp] += A[despA + i*r+k]*B[despB + k*r+j]; 
-                        };
-                    }
-                };
-            };
-        };  
-    }; 
-
-    // Volvemos a poner la matriz A en 0, a fin de reutilizarla para los cálculos y ahorrar el espacio ocupado
-    #pragma omp parallel for private(despB, i, j)
-    for (I= 0; I< N; I++){
-        for(J=0;J<N;J++){
-            despB=(I*N+J)*r*r;
-            for (i= 0; i< r; i++){
-                for (j=0;j<r;j++){
-                    A[despB+ i*r+j]= 0;
+                        A[despB+ i*r+j]= A[despB+ i*r+j]*l;
+                    };
                 };
             };
         };
-    };
-
-    // Terminamos de calcular el primer término calculando lA𝐵𝐶 y lo guardamos en A
-    #pragma omp parallel for private(despA, despB, despC, desp, K, k, i, j)
-    for (I=0;I<N;I++){
-        for (J=0;J<N;J++){
-            despC = (I*N+J)*sizeBlock;
-            for (K=0;K<N;K++){
-                despA = (I*N+K)*sizeBlock;
-                despB = (K*N+J)*sizeBlock;
-                for (i=0;i<r;i++){
-                    for (j=0;j<r;j++){
-                        desp = despC + i*r+j;
-                        for (k=0;k<r;k++){
-                            A[desp] += M[despA + i*r+k]*C[despB + k*r+j]; 
-                        };
-                    }
-                };
-            };
-        };  
-    }; 
-
-    // Ya terminamos de calcular el primer término
-
-    // Volvemos a poner la matriz A en 0, a fin de reutilizarla para los cálculos y ahorrar el espacio ocupado
-    #pragma omp parallel for private(despB, i, j)
-    for (I= 0; I<N; I++){
-        for(J=0;J<N;J++){
-            despB=(I*N+J)*r*r;
-            for (i= 0; i< r; i++){
-                for (j=0;j<r;j++){
-                    M[despB+ i*r+j]= 0;
-                };
-            };
-        };
-    };
-
-    // Calculamos el segundo término: 𝑏𝐿𝐵𝐷
-
-    // Calculamos 𝑏𝐿 y lo guardamos en L. Recordar que L es la matriz triangular y se calcula usando bloques triangulares
-    despA = 0;
-    #pragma omp parallel for private(despA, i, j)
-    for (I= 0; I< N; I++){
-        for(J=0;J<N;J++){
-            if(I>=1)
-                despA = I*sizeTriangularBlock+(I-1+J)*sizeBlock;
-            for (i= 0; i< r; i++){
-                for (j=0;j<r;j++){
-                    if(I==J){
-                        if(i>=j){
-                            L[despA+ i+j+i*(i-1)/2] = L[despA+ i+j+i*(i-1)/2] * b;
-                        }            
-                    }else{
-                        L[despA+ i*r+j] = L[despA+ i*r+j] * b;            
-                    }
-                };
-            };
-        };
-    };
-
-    // Calculamos 𝑏𝐿𝐵 y lo guardamos en M. Recordar que L es la matriz triangular y se calcula usando bloques triangulares
-    #pragma omp parallel for private(despA, despB, despC, desp, K, k, i, j)
-    for (I=0;I<N;I++){
-        for (J=0;J<N;J++){
-            despC = (I*N+J)*sizeBlock;
-            despA = 0;
-            for (K=0;K<=I;K++){ // K<=0 nos permite no movernos hacia 'bloques vacíos'
-                if(I>=1){
-                    despA = I*sizeTriangularBlock+(I-1+K)*sizeBlock;
-                }
-                despB = (K*N+J)*sizeBlock;
-                for (i=0;i<r;i++){
-                    for (j=0;j<r;j++){
-                        desp = despC + i*r+j; // Usamos 'desp' para pararnos en la celda correcta para guardar el resultado
-                        if(I==K){
-                            for(k=0;k<=i;k++){
-                                M[desp] += L[despA + i+k+i*(i-1)/2] * B[despB + k*r+j];
+    
+        // Calculamos l𝐴𝐵 y lo guardamos en M
+        #pragma omp for private(despA, despB, despC, desp, K, k, i, j) collapse(2)
+        for (I=0;I<N;I++){
+            for (J=0;J<N;J++){
+                despC = (I*N+J)*sizeBlock;
+                for (K=0;K<N;K++){ // Se va moviendo por la fila de bloques de A y la columna de bloques de B. Se multiplican bloques
+                    despA = (I*N+K)*sizeBlock;
+                    despB = (K*N+J)*sizeBlock;
+                    for (i=0;i<r;i++){
+                        for (j=0;j<r;j++){
+                            desp = despC + i*r+j;
+                            for (k=0;k<r;k++){ // Se va moviendo por la fila de bloques de A y la columna de bloques de B. Se multiplican elementos
+                                M[desp] += A[despA + i*r+k]*B[despB + k*r+j]; 
                             };
-                        }else{
-                            for (k=0;k<r;k++){
-                                M[desp] += L[despA + i*r+k] * B[despB + k*r+j];
-                            };            
                         }
-                    }
+                    };
                 };
-            };
-        };  
-    }; 
+            };  
+        }; 
 
-    // Volvemos a poner la matriz B en 0, a fin de reutilizarla para los cálculos y ahorrar el espacio ocupado
-    #pragma omp parallel for private(despB, i, j)
-    for (I= 0; I< N; I++){
-        for(J=0;J<N;J++){
-            despB=(I*N+J)*r*r;
-            for (i= 0; i< r; i++){
-                for (j=0;j<r;j++){
-                    B[despB+ i*r+j]= 0;
+        // Volvemos a poner la matriz A en 0, a fin de reutilizarla para los cálculos y ahorrar el espacio ocupado
+        #pragma omp for private(despB, i, j) collapse(2)
+        for (I= 0; I< N; I++){
+            for(J=0;J<N;J++){
+                despB=(I*N+J)*r*r;
+                for (i= 0; i< r; i++){
+                    for (j=0;j<r;j++){
+                        A[despB+ i*r+j]= 0;
+                    };
                 };
             };
         };
-    };
 
-    // Calculamos 𝑏𝐿𝐵𝐷 y lo guardamos en B
-    #pragma omp parallel for private(despA, despB, despC, desp, K, k, i, j)
-    for (I=0;I<N;I++){
-        for (J=0;J<N;J++){
-            despC = (I*N+J)*sizeBlock;
-            for (K=0;K<N;K++){
-                despA = (I*N+K)*sizeBlock;
-                despB = (K*N+J)*sizeBlock;
-                for (i=0;i<r;i++){
+        // Terminamos de calcular el primer término calculando lA𝐵𝐶 y lo guardamos en A
+        #pragma omp for private(despA, despB, despC, desp, K, k, i, j) collapse(2)
+        for (I=0;I<N;I++){
+            for (J=0;J<N;J++){
+                despC = (I*N+J)*sizeBlock;
+                for (K=0;K<N;K++){
+                    despA = (I*N+K)*sizeBlock;
+                    despB = (K*N+J)*sizeBlock;
+                    for (i=0;i<r;i++){
+                        for (j=0;j<r;j++){
+                            desp = despC + i*r+j;
+                            for (k=0;k<r;k++){
+                                A[desp] += M[despA + i*r+k]*C[despB + k*r+j]; 
+                            };
+                        }
+                    };
+                };
+            };  
+        }; 
+    
+        // Volvemos a poner la matriz A en 0, a fin de reutilizarla para los cálculos y ahorrar el espacio ocupado
+        #pragma omp for private(despB, i, j) collapse(2)
+        for (I= 0; I<N; I++){
+            for(J=0;J<N;J++){
+                despB=(I*N+J)*r*r;
+                for (i= 0; i< r; i++){
                     for (j=0;j<r;j++){
-                        desp = despC + i*r+j;
-                        for (k=0;k<r;k++){
-                            B[desp] += M[despA + i*r+k]*D[despB + k*r+j]; 
-                        };
-                    }
+                        M[despB+ i*r+j]= 0;
+                    };
                 };
             };
-        };  
-    }; 
+        };
+    }
+
+        // Ya terminamos de calcular el primer término
+
+        // Calculamos el segundo término: 𝑏𝐿𝐵𝐷
+        
+    #pragma omp parallel
+    {
+
+        // Calculamos 𝑏𝐿 y lo guardamos en L. Recordar que L es la matriz triangular y se calcula usando bloques triangulares
+        
+        despA = 0;
+        #pragma omp for private(despA, i, j) collapse(2)
+        for (I= 0; I< N; I++){
+            for(J=0;J<N;J++){
+                if(I>=1)
+                    despA = I*sizeTriangularBlock+(I-1+J)*sizeBlock;
+                for (i= 0; i< r; i++){
+                    for (j=0;j<r;j++){
+                        if(I==J){
+                            if(i>=j){
+                                L[despA+ i+j+i*(i-1)/2] = L[despA+ i+j+i*(i-1)/2] * b;
+                            }            
+                        }else{
+                            L[despA+ i*r+j] = L[despA+ i*r+j] * b;            
+                        }
+                    };
+                };
+            };
+        };
+
+        // Calculamos 𝑏𝐿𝐵 y lo guardamos en M. Recordar que L es la matriz triangular y se calcula usando bloques triangulares
+        #pragma omp for private(despA, despB, despC, desp, K, k, i, j) collapse(2)
+        for (I=0;I<N;I++){
+            for (J=0;J<N;J++){
+                despC = (I*N+J)*sizeBlock;
+                despA = 0;
+                for (K=0;K<=I;K++){ // K<=0 nos permite no movernos hacia 'bloques vacíos'
+                    if(I>=1){
+                        despA = I*sizeTriangularBlock+(I-1+K)*sizeBlock;
+                    }
+                    despB = (K*N+J)*sizeBlock;
+                    for (i=0;i<r;i++){
+                        for (j=0;j<r;j++){
+                            desp = despC + i*r+j; // Usamos 'desp' para pararnos en la celda correcta para guardar el resultado
+                            if(I==K){
+                                for(k=0;k<=i;k++){
+                                    M[desp] += L[despA + i+k+i*(i-1)/2] * B[despB + k*r+j];
+                                };
+                            }else{
+                                for (k=0;k<r;k++){
+                                    M[desp] += L[despA + i*r+k] * B[despB + k*r+j];
+                                };            
+                            }
+                        }
+                    };
+                };
+            };  
+        }; 
+
+        // Volvemos a poner la matriz B en 0, a fin de reutilizarla para los cálculos y ahorrar el espacio ocupado
+        #pragma omp for private(despB, i, j) collapse(2)
+        for (I= 0; I< N; I++){
+            for(J=0;J<N;J++){
+                despB=(I*N+J)*r*r;
+                for (i= 0; i< r; i++){
+                    for (j=0;j<r;j++){
+                        B[despB+ i*r+j]= 0;
+                    };
+                };
+            };
+        };
+
+        // Calculamos 𝑏𝐿𝐵𝐷 y lo guardamos en B
+        #pragma omp for private(despA, despB, despC, desp, K, k, i, j) collapse(2)
+        for (I=0;I<N;I++){
+            for (J=0;J<N;J++){
+                despC = (I*N+J)*sizeBlock;
+                for (K=0;K<N;K++){
+                    despA = (I*N+K)*sizeBlock;
+                    despB = (K*N+J)*sizeBlock;
+                    for (i=0;i<r;i++){
+                        for (j=0;j<r;j++){
+                            desp = despC + i*r+j;
+                            for (k=0;k<r;k++){
+                                B[desp] += M[despA + i*r+k]*D[despB + k*r+j]; 
+                            };
+                        }
+                    };
+                };
+            };  
+        }; 
+    }
 
     // Ya terminamos de calcular el segundo término
 
     // Finalmente calculamos 𝑙.𝐴𝐵𝐶 + 𝑏𝐿𝐵𝐷 y guardamos el resultado en M. Recordar que A = 𝑙.𝐴𝐵𝐶 y B = 𝑏𝐿𝐵𝐷.
-    #pragma omp parallel for private(despB, i, j)
-    for (I= 0; I< N; I++){
-        for(J=0;J<N;J++){
-            despB=(I*N+J)*r*r;
-            for (i= 0; i< r; i++){
-                for (j=0;j<r;j++){
-                    M[despB+ i*r+j] = A[despB+ i*r+j] + B[despB+ i*r+j];
+    
+    #pragma omp parallel
+    {
+        #pragma omp for private(despB, i, j) collapse(2)
+        for (I= 0; I< N; I++){
+            for(J=0;J<N;J++){
+                despB=(I*N+J)*r*r;
+                for (i= 0; i< r; i++){
+                    for (j=0;j<r;j++){
+                        M[despB+ i*r+j] = A[despB+ i*r+j] + B[despB+ i*r+j];
+                    };
                 };
             };
         };
-    };
-
+    }
+    
     printf("Tiempo en segundos %f\n", dwalltime() - timetick); // Informamos el tiempo
 
     // Verifica el resultado
