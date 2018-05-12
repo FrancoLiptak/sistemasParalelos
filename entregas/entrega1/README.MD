@@ -58,6 +58,16 @@ Finalmente liberamos el espacio ocupado y termina nuestra solución.
 
 ### Resolución con OpenMP
 
+La solución con Pthreads se basa en nuestra solución secuencial y por ende, se pasa a explicar sus diferencias.
+
+El usuario deberá ingresar, además de la cantidad de bloques por lado y la longitud de cada bloque, el número de hilos con el que quiere trabajar. Recordar que trabajamos con potencias de dos.
+
+Utilizamos la instrucción `#pragma omp parallel` con el fin de paralelizar distintas partes del código. Las partes puntualmente son: resolución del primer término, resolución del segundo término y la suma de los resultados de los otros términos. La cantidad de hilos a utilizar es la cantidad total, es decir, la ingresada por el usuario (que fue configurada con `omp_set_num_threads(NUM_THREADS);`).
+
+Luego de esta primera gran división en partes de la resolución del problema, cada una de las operaciones (que recordemos, se resuelven con `for`) cuenta con un encabezado `#pragma omp for`, el cual indica que se va a paralelizar la ejecución de un `for`. Además, se ponen como privadas variables que serán utilizadas por todos los hilos, con el fin de que un hilo no vea las modificaciones hechas por otro, y no haya conflicto entre sus procesamientos. Por último, también se utiliza la claúsula `collapse(N)`, la cual nos garantiza el uso de Threads para los valores I y J, utilizados en los `for` "mas de afuera", los cuales son utilizados para elegir el bloque a computar por cada hilo.
+
+No hay mas diferencias con la solución secuencial.
+
 ### Mediciones
 
 ##### Tiempo con un solo hilo en las soluciones con Pthreads y OpenMP:
@@ -114,8 +124,8 @@ El usuario deberá ingresar, además de la longitud del vector con el cual desea
 
 Al momento de contar la cantidad de números pares, simplemente agregamos la siguiente linea de código: ` #pragma omp parallel for reduction(+:pares) `, la cual se explica a continuación:
 
-- `parallel`: especifica que el bloque de código será ejecutado en paralelo. Cada hilo tendrá un ID único. Finalizada la región paralela, solo el hilo master continúa con la ejecución.
-- `for`: indica que se va a paralelizar la ejecución de un 'for'. En nuestro caso, recordar que el recorrido del vector se realiza con este iterador.
+- `parallel`: especifica que el bloque de código será ejecutado en paralelo. Cada hilo tendrá un ID único. Finalizada la región paralela, solo el hilo master continúa con la ejecución. La cantidad de hilos a utilizar es la cantidad total, es decir, la ingresada por el usuario (que fue configurada con `omp_set_num_threads(NUM_THREADS);`).
+- `for`: indica que se va a paralelizar la ejecución de un `for`. En nuestro caso, recordar que el recorrido del vector se realiza con este iterador.
 - `reduction(+:pares)`: en nuestro caso, indica a cada hilo que se debe realizar una suma sobre la variable indicada.
 
 Con eso terminan las diferencias respecto a la solución secuencial.

@@ -138,7 +138,7 @@ int main(int argc,char* argv[]){
         };
     
         // Calculamos l𝐴𝐵 y lo guardamos en M
-        #pragma omp for private(despA, despB, despC, desp, K, k, i, j) collapse(2) // DUDA
+        #pragma omp for private(despA, despB, despC, desp, K, k, i, j) collapse(2)
         for (I=0;I<N;I++){
             for (J=0;J<N;J++){
                 despC = (I*N+J)*sizeBlock;
