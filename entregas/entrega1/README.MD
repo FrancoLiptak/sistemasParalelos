@@ -89,7 +89,7 @@ No hay mas diferencias con la solución secuencial.
 | Longitud del vector | Tiempo secuencial | Tiempo con Pthreads | Tiempo con OpenMP |
 | --------------------|:-----------------:|:-------------------:|:-----------------:|
 
-##### Tiempo con dos hils en las soluciones con Pthreads y OpenMP:
+##### Tiempo con dos hilos en las soluciones con Pthreads y OpenMP:
 
 | Longitud del vector | Tiempo secuencial | Tiempo con Pthreads | Tiempo con OpenMP |
 | --------------------|:-----------------:|:-------------------:|:-----------------:|
@@ -151,7 +151,8 @@ Con eso terminan las diferencias respecto a la solución secuencial.
 | Longitud del vector | Tiempo secuencial | Tiempo con Pthreads | Tiempo con OpenMP |
 | --------------------|:-----------------:|:-------------------:|:-----------------:|
 
-##### Tiempo con dos hils en las soluciones con Pthreads y OpenMP:
+
+##### Tiempo con dos hilos en las soluciones con Pthreads y OpenMP:
 
 | Longitud del vector | Tiempo secuencial | Tiempo con Pthreads | Tiempo con OpenMP |
 | --------------------|:-----------------:|:-------------------:|:-----------------:|
