@@ -21,7 +21,7 @@ Evaluar N=512, 1024 y 2048."*
 
 Para poder ejecutar este ejercicio, el usuario debe ingresar la cantidad de bloques por lado, y la longitud de cada bloque. 
 
-Posteriormente se inicializan las variables necesarias y se aloca espacio para las distintas matrices. La idea será ahorrar espacio, por ende, las matrices se reutilizarán (será necesario inicializar algunas en 0 después de utilizarlas). Es importante aclarar que para la matriz triangular solo se reserva el espacio correspondiente al triangulo inferior, y por ende solo se inicializan dichas posiciones.
+Posteriormente se inicializan las variables necesarias y se aloca espacio para las distintas matrices. Para evitar desperdiciar espacio, las matrices se reutilizarán (será necesario inicializar algunas en 0 después de utilizarlas). Es importante aclarar que para la matriz triangular solo se reserva el espacio correspondiente al triangulo inferior, y por ende solo se inicializan dichas posiciones.
 
 Luego de terminar la inicialización, comenzamos a controlar el tiempo.
 
