@@ -327,7 +327,7 @@ int main(int argc,char* argv[]){
   };//end for I
 */
 
-/* para imprimir matrices sacar el comentario
+
   printf("Contenido de la matriz lA𝐵𝐶: \n" );
   for (I= 0; I< N; I++){
     //para cada fila de bloques (I)
@@ -379,7 +379,7 @@ int main(int argc,char* argv[]){
 
   };//end for I
   printf(" \n\n");
-*/
+
 
  //Verifica el resultado
   for (I= 0; I< N; I++){
