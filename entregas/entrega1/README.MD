@@ -90,8 +90,9 @@ No hay mas diferencias con la solución secuencial.
 
 | Tamaño de la matriz | Tiempo secuencial | Tiempo con Pthreads | Tiempo con OpenMP |
 | --------------------|:-----------------:|:-------------------:|:-----------------:|
-| 4 bloques de 128    | 4,6964404         | 4,866993667         | 4.766518          |
-| 8 bloques de 128    | 37,3414172        | 38,871684           | 38.231288         |
+| 4 bloques de 128    | 4.6964404         | 4.866993667         | 4.766518          |
+| 8 bloques de 128    | 37.3414172        | 38.871684           | 38.231288         |
+| 16 bloques de 128   | 299.779390        | 312.904854          | 310.314079        |
 
 ##### Speedup con un solo hilo en las soluciones con Pthreads y OpenMP:
 
@@ -99,6 +100,7 @@ No hay mas diferencias con la solución secuencial.
 | --------------------|:--------------------:|:------------------:|
 | 4 bloques de 128    | 0.96495716274        | 0.98529794705      |
 | 8 bloques de 128    | 0.96063286581        | 0.97672401725      |
+| 16 bloques de 128   | 0.95805285909        | 0.96605152742      |
 
 ##### Eficiencia con un solo hilo en las soluciones con Pthreads y OpenMP:
 
@@ -106,34 +108,39 @@ No hay mas diferencias con la solución secuencial.
 | --------------------|:-----------------------:|:---------------------:|
 | 4 bloques de 128    | 0.96495716274           | 0.98529794705         |
 | 8 bloques de 128    | 0.96063286581           | 0.97672401725         |
+| 16 bloques de 128   | 0.95805285909           | 0.96605152742         |
 
 ##### Tiempo con dos hilos en las soluciones con Pthreads y OpenMP:
 
 | Tamaño de la matriz | Tiempo secuencial | Tiempo con Pthreads | Tiempo con OpenMP |
 | --------------------|:-----------------:|:-------------------:|:-----------------:|
-| 4 bloques de 128    | 4,6964404         | 2.693269            | 2.651285          |
-| 8 bloques de 128    | 37,3414172        | 21.589481           | 21.196580         |
+| 4 bloques de 128    | 4.6964404         | 2.693269            | 2.651285          |
+| 8 bloques de 128    | 37.3414172        | 21.589481           | 21.196580         |
+| 16 bloques de 128   | 299.779390        | 171.639295          | 168.560662        |
 
 ##### Speedup con dos hilos en las soluciones con Pthreads y OpenMP:
 
 | Tamaño de la matriz | Speedup con Pthreads | Speedup con OpenMP |
-| --------------------|:-------------------:|:-----------------:|
-| 4 bloques de 128    | 1.74376952321        | 1.77138270688          |
-| 8 bloques de 128    | 1.72961161966           | 1.761671798         |
+| --------------------|:--------------------:|:------------------:|
+| 4 bloques de 128    | 1.74376952321        | 1.77138270688      |
+| 8 bloques de 128    | 1.72961161966        | 1.761671798        |
+| 16 bloques de 128   | 1.74656619278        | 1.77846590327      |
 
 ##### Eficiencia con dos hilos en las soluciones con Pthreads y OpenMP:
 
 | Tamaño de la matriz | Eficiencia con Pthreads | Eficiencia con OpenMP |
-| --------------------|:-------------------:|:-----------------:|
-| 4 bloques de 128    | 0.8718847616         | 0.88569135344          |
-| 8 bloques de 128    | 0.86480580983           | 0.880835899         |
+| --------------------|:-----------------------:|:---------------------:|
+| 4 bloques de 128    | 0.8718847616            | 0.88569135344         |
+| 8 bloques de 128    | 0.86480580983           | 0.880835899           |
+| 8 bloques de 128    | 0.87328309639           | 0.88923295163         |
 
 ##### Tiempo con cuatro hilos en las soluciones con Pthreads y OpenMP:
 
 | Tamaño de la matriz | Tiempo secuencial | Tiempo con Pthreads | Tiempo con OpenMP |
 | --------------------|:-----------------:|:-------------------:|:-----------------:|
-| 4 bloques de 128    | 4,6964404         | 1.528396            | 1.453902          |
-| 8 bloques de 128    | 37,3414172        | 11.664970           | 11.401058         |
+| 4 bloques de 128    | 4.6964404         | 1.528396            | 1.453902          |
+| 8 bloques de 128    | 37.3414172        | 11.664970           | 11.401058         |
+| 16 bloques de 128   | 299.779390        | 92.619321           | 91.318975         |
 
 ##### Speedup con cuatro hilos en las soluciones con Pthreads y OpenMP:
 
@@ -141,6 +148,7 @@ No hay mas diferencias con la solución secuencial.
 | --------------------|:--------------------:|:------------------:|
 | 4 bloques de 128    | 3.0727902978         | 3.23023174877      |
 | 8 bloques de 128    | 3.20115844276        | 3.27525894527      |
+| 8 bloques de 128    | 3.23668308905        | 3.28277217303      |
 
 ##### Eficiencia con cuatro hilos en las soluciones con Pthreads y OpenMP:
 
@@ -148,6 +156,7 @@ No hay mas diferencias con la solución secuencial.
 | --------------------|:-----------------------:|:---------------------:|
 | 4 bloques de 128    | 0.76819757445           | 0.80755793719         |
 | 8 bloques de 128    | 0.80028961069           | 0.81881473631         |
+| 8 bloques de 128    | 0.80917077226           | 0.82069304325         |
 
 ## Ejercicio 2
 
@@ -201,29 +210,29 @@ Con eso terminan las diferencias respecto a la solución secuencial.
 | Longitud del vector | Tiempo secuencial | Tiempo con Pthreads | Tiempo con OpenMP |
 | --------------------|:-----------------:|:-------------------:|:-----------------:|
 | 2^28 = 268435456    | 1.380244          | 1.383570            | 1.388685          |
-| 2^30 = 1073741824   | 5,3868828         | 5,6646752           | 5,6232478         |
+| 2^30 = 1073741824   | 5.3868828         | 5.6646752           | 5.6232478         |
 
 ##### Speedup con un solo hilo en las soluciones con Pthreads y OpenMP:
 
 | Longitud del vector | Speedup con Pthreads | Speedup con OpenMP |
 | --------------------|:--------------------:|:------------------:|
-| 2^28 = 268435456    | 0,997596074          | 0,993921588        |
-| 2^30 = 1073741824   | 0,950960578          | 0,957966462        |
+| 2^28 = 268435456    | 0.997596074          | 0.993921588        |
+| 2^30 = 1073741824   | 0.950960578          | 0.957966462        |
 
 ##### Eficiencia con un solo hilo en las soluciones con Pthreads y OpenMP:
 
 | Longitud del vector | Eficiencia con Pthreads | Eficiencia con OpenMP |
 | --------------------|:-----------------------:|:---------------------:|
-| 2^28 = 268435456    | 0,997596074             | 0,993921588           |
-| 2^30 = 1073741824   | 0,950960578             | 0,957966462           |
+| 2^28 = 268435456    | 0.997596074             | 0.993921588           |
+| 2^30 = 1073741824   | 0.950960578             | 0.957966462           |
 
 
 ##### Tiempo con dos hilos en las soluciones con Pthreads y OpenMP:
 
 | Longitud del vector | Tiempo secuencial | Tiempo con Pthreads | Tiempo con OpenMP |
 | --------------------|:-----------------:|:-------------------:|:-----------------:|
-| 2^28 = 268435456    | 1.380244          | 0.724567            | 0,7225472         |
-| 2^30 = 1073741824   | 5,3868828         | 2,8348112           | 2,8872884         |
+| 2^28 = 268435456    | 1.380244          | 0.724567            | 0.7225472         |
+| 2^30 = 1073741824   | 5.3868828         | 2.8348112           | 2.8872884         |
 
 ##### Speedup con dos hilos en las soluciones con Pthreads y OpenMP:
 
@@ -243,8 +252,8 @@ Con eso terminan las diferencias respecto a la solución secuencial.
 
 | Longitud del vector | Tiempo secuencial | Tiempo con Pthreads | Tiempo con OpenMP |
 | --------------------|:-----------------:|:-------------------:|:-----------------:|
-| 2^28 = 268435456    | 1.380244          | 0,380976            | 0.392383          |
-| 2^30 = 1073741824   | 5,3868828         | 1,503635            | 1.535451          |
+| 2^28 = 268435456    | 1.380244          | 0.380976            | 0.392383          |
+| 2^30 = 1073741824   | 5.3868828         | 1.503635            | 1.535451          |
 
 ##### Speedup con cuatro hilos en las soluciones con Pthreads y OpenMP:
 
@@ -262,4 +271,4 @@ Con eso terminan las diferencias respecto a la solución secuencial.
 
 ## Conclusiones
 
-Gracias al paralelismo de los problemas utilizando Pthreads y Openmp hemos logrado reducir en gran medida el tiempo requerido para el procesamiento de estos. Pthreads logro mejor speedup y eficiencia en el ejercicio 2 pero esto no se vio reflejado en el ejercicio 1, debido a su complejidad de implementacion comparado con OpenMP el cual fue más sensillo de implementar y logro mejores resultados en el ejercicio 1.
+Gracias al paralelismo de los problemas utilizando Pthreads y OpenMP hemos logrado reducir en gran medida el tiempo requerido para el procesamiento de estos. Pthreads logro mejor speedup y eficiencia en el ejercicio 2, pero esto no se vió reflejado en el ejercicio 1, debido a su complejidad de implementación comparado con OpenMP en loops for anidados, el cual fue más sencillo de implementar y logró mejores resultados en el ejercicio 1.
