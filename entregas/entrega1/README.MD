@@ -70,6 +70,8 @@ Dado que las funciones son generales, se requiere un método para poder pasarle 
 
 -`arg_struct_zero`: Se utiliza para inicializar una matriz con todos sus elementos en 0. Posee un `int` para pasar el id del hilo y otro argumento para pasar la matriz que se inicializará con todos sus elementos en 0 (`arg1`).
 
+En esta solución la concurrencia se encuentra en que los bloques se repartiran entre los hilos de modo que en cada operacion de una matriz, un hilo tomará N/NUM_THREADS filas de bloques.
+
 ### Resolución con OpenMP
 
 La solución con OpenMP se basa en nuestra solución secuencial y por ende, se pasa a explicar sus diferencias.
@@ -257,3 +259,7 @@ Con eso terminan las diferencias respecto a la solución secuencial.
 | --------------------|:-----------------------:|:---------------------:|
 | 2^28 = 268435456    | 0.9057289698            | 0.87939844488         |
 | 2^30 = 1073741824   | 0.89564335759           | 0.87708477834         |
+
+## Conclusiones
+
+Gracias al paralelismo de los problemas utilizando Pthreads y Openmp hemos logrado reducir en gran medida el tiempo requerido para el procesamiento de estos. Pthreads logro mejor speedup y eficiencia en el ejercicio 2 pero esto no se vio reflejado en el ejercicio 1, debido a su complejidad de implementacion comparado con OpenMP el cual fue más sensillo de implementar y logro mejores resultados en el ejercicio 1.
