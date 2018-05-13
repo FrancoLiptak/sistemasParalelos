@@ -144,20 +144,25 @@ Al momento de contar la cantidad de números pares, simplemente agregamos la sig
 
 Con eso terminan las diferencias respecto a la solución secuencial.
 
-### Mediciones
+### Mediciones (Los resultados mostrados son un promedio de 5 pruebas)
 
 ##### Tiempo con un solo hilo en las soluciones con Pthreads y OpenMP:
 
 | Longitud del vector | Tiempo secuencial | Tiempo con Pthreads | Tiempo con OpenMP |
 | --------------------|:-----------------:|:-------------------:|:-----------------:|
-
+| 2^28 = 268435456    | 1.380244          | 1.383570            | 1.388685          |
+| 2^30 = 1073741824   | 5,3868828         | 5,6646752           | 5,6232478         |
 
 ##### Tiempo con dos hilos en las soluciones con Pthreads y OpenMP:
 
 | Longitud del vector | Tiempo secuencial | Tiempo con Pthreads | Tiempo con OpenMP |
 | --------------------|:-----------------:|:-------------------:|:-----------------:|
+| 2^28 = 268435456    | 1.380244          | 0.724567            | 0,7225472         |
+| 2^30 = 1073741824   | 5,3868828         | 2,8348112           | 2,8872884         |
 
 ##### Tiempo con cuatro hilos en las soluciones con Pthreads y OpenMP:
 
 | Longitud del vector | Tiempo secuencial | Tiempo con Pthreads | Tiempo con OpenMP |
 | --------------------|:-----------------:|:-------------------:|:-----------------:|
+| 2^28 = 268435456    | 1.380244          | 0,380976            | 0.392383          |
+| 2^30 = 1073741824   | 5,3868828         | 1,503635            | 1.535451          |
