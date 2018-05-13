@@ -186,15 +186,15 @@ Con eso terminan las diferencias respecto a la solución secuencial.
 
 | Longitud del vector | Speedup con Pthreads | Speedup con OpenMP |
 | --------------------|:--------------------:|:------------------:|
-| 2^28 = 268435456    | 1.90492252614          | 1.91024752431       |
-| 2^30 = 1073741824   | 1.9002615765          | 1.86572383971        |
+| 2^28 = 268435456    | 1.90492252614        | 1.91024752431      |
+| 2^30 = 1073741824   | 1.9002615765         | 1.86572383971      |
 
 ##### Eficiencia con dos hilos en las soluciones con Pthreads y OpenMP:
 
 | Longitud del vector | Eficiencia con Pthreads | Eficiencia con OpenMP |
 | --------------------|:-----------------------:|:---------------------:|
-| 2^28 = 268435456    | 0.95246126307             | 0.95512376215           |
-| 2^30 = 1073741824   | 0.95013078825             | 0.93286191985          |
+| 2^28 = 268435456    | 0.95246126307           | 0.95512376215         |
+| 2^30 = 1073741824   | 0.95013078825           | 0.93286191985         |
 
 ##### Tiempo con cuatro hilos en las soluciones con Pthreads y OpenMP:
 
@@ -207,12 +207,12 @@ Con eso terminan las diferencias respecto a la solución secuencial.
 
 | Longitud del vector | Speedup con Pthreads | Speedup con OpenMP |
 | --------------------|:--------------------:|:------------------:|
-| 2^28 = 268435456    | 3.62291587922          | 3.51759377955       |
-| 2^30 = 1073741824   | 3.58257343039          | 3.50833911339        |
+| 2^28 = 268435456    | 3.62291587922        | 3.51759377955      |
+| 2^30 = 1073741824   | 3.58257343039        | 3.50833911339      |
 
 ##### Eficiencia con cuatro hilos en las soluciones con Pthreads y OpenMP:
 
 | Longitud del vector | Eficiencia con Pthreads | Eficiencia con OpenMP |
 | --------------------|:-----------------------:|:---------------------:|
-| 2^28 = 268435456    | 0.9057289698             | 0.87939844488           |
-| 2^30 = 1073741824   | 0.89564335759             | 0.87708477834          |
+| 2^28 = 268435456    | 0.9057289698            | 0.87939844488         |
+| 2^30 = 1073741824   | 0.89564335759           | 0.87708477834         |
