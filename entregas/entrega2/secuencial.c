@@ -50,17 +50,15 @@ int main(int argc,char*argv[]){
         j = 0;
         not_found = 1;
         while( (not_found == 1) && (j < N) ){
-            if(col_available[j] == 0){
-                // prueba si se puede asignar
-                if( (asc_diagonal[i+j] == 0) && (des_diagonal[(N-1)-(i-j)] == 0) && (queens[i] < j) ){
+            if ( (col_available[j] == 0) // la columna no tiene otra reina
+                && (asc_diagonal[i+j] == 0) // la diagonal ascendente no tiene otra reina
+                && (des_diagonal[(N-1)-(i-j)] == 0) // la diagonal descendente no tiene otra reina
+                && (queens[i] < j) ){ // no vuelve a un casillero ya elejido
                     if ( backtrack == 1 ){
                         // libero lo que tenia asignado la vuelta pasada
                         col_available[queens[i]] = 0;
                         asc_diagonal[i+queens[i]] = 0;
                         des_diagonal[(N-1)-(i-queens[i])] = 0;
-                    }
-                    if(i == 0){
-                        printf("j elejido: %d\n", j);
                     }
                     queens[i] = j;
                     col_available[j] = 1;
@@ -68,7 +66,6 @@ int main(int argc,char*argv[]){
                     des_diagonal[(N-1)-(i-j)] = 1;
                     not_found = 0;
                     backtrack = 0;
-                } 
             }
             j++;
         }
