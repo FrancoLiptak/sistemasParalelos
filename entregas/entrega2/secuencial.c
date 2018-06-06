@@ -19,10 +19,11 @@ int main(int argc,char*argv[]){
     int *queens, *col_available, *asc_diagonal, *des_diagonal;
     int i,j;
     int num_solutions = 0;
+    int backtrack = 0;
     int check=1;
+    int queens_final = 0;
     double timetick;
     int not_found = 1;
-    int solution_exists = 1;
 
     //Controla los argumentos al programa
     if ((argc != 2) || ((N = atoi(argv[1])) <= 0) ){
@@ -33,43 +34,77 @@ int main(int argc,char*argv[]){
     //Aloca memoria para las matrices
     queens=(int*)malloc(sizeof(int)*N);
     col_available=(int*)calloc(N, sizeof(int));
-    asc_diagonal=(int*)malloc(sizeof(int)*N);
-    des_diagonal=(int*)malloc(sizeof(int)*N);
+    asc_diagonal=(int*)malloc(sizeof(int)*(N-1)*2+1);
+    des_diagonal=(int*)malloc(sizeof(int)*(N-1)*2+1);
 
     // Inicializo queens en -1 
     for(i=0; i<N; i++){
-        queens[i] = i;
+        queens[i] = -1;
     }
 
     timetick = dwalltime(); //Empieza a controlar el tiempo
 
     //Coloca las reinas
     i = 0;
-    while( (solution_exists == 1) && (i < N) ){
+    while( queens_final == 0 ){
         j = 0;
+        not_found = 1;
         while( (not_found == 1) && (j < N) ){
             if(col_available[j] == 0){
-                if( (asc_diagonal[i+j] == 0) && (des_diagonal[-(i-j-N-1)] == 0) && (queens[i] < j) ){ //Para probar las diagonales
+                // prueba si se puede asignar
+                if( (asc_diagonal[i+j] == 0) && (des_diagonal[(N-1)-(i-j)] == 0) && (queens[i] < j) ){
+                    if ( backtrack == 1 ){
+                        // libero lo que tenia asignado la vuelta pasada
+                        col_available[queens[i]] = 0;
+                        asc_diagonal[i+queens[i]] = 0;
+                        des_diagonal[(N-1)-(i-queens[i])] = 0;
+                    }
+                    if(i == 0){
+                        printf("j elejido: %d\n", j);
+                    }
                     queens[i] = j;
                     col_available[j] = 1;
                     asc_diagonal[i+j] = 1;
-                    des_diagonal[-(i-j-N-1)] = 1;
+                    des_diagonal[(N-1)-(i-j)] = 1;
                     not_found = 0;
+                    backtrack = 0;
                 } 
             }
             j++;
         }
 
-        if( (not_found == 1) ){ // Si encuentra o no encuentra solucion tiene que liberar. si no encuentra la proxima vuelve otro mas para atras
+        // Si no encuentra solucion entonces no tiene solucion el problema o llego al ultimo valido de esa reina en esa rama
+        // debe ir a la reina anterior
+        if( not_found == 1 ){ 
+            // Si es el ultimo valido de la rama entonces tiene que liberar antes de subir
+            if (queens[i] != -1){
+                // Libero lo que tenia asignado la vuelta pasada
+                col_available[queens[i]] = 0;
+                asc_diagonal[i+queens[i]] = 0;
+                des_diagonal[(N-1)-(i-queens[i])] = 0;
+                queens[i] = -1;
+                if (i == 0){
+                    queens_final = 1;
+                }
+            }
+            backtrack = 1;
             i--;
         }else{
-            if( !(i == N-1) ){
+            // Si no termino entonces sigue avanzando
+            // Si termino entonces prueba con otra columna para la reina (se repite la busqueda para la misma reina)
+            if( i != N-1 ){
                 i++;
+            }else{
+                // imprimir
+                num_solutions++;
             }
         }
 
-        // Falta que el algoritmo pare
     }
+
+    printf("Tiempo en segundos %f\n", dwalltime() - timetick); // Informamos el tiempo
+
+    printf("Resultado: %d\n", num_solutions);
 
     free(queens);
     free(col_available);
