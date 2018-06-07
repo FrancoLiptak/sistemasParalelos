@@ -17,7 +17,8 @@ double dwalltime(){
 
 int main(int argc,char*argv[]){
     int *queens, *col_available, *asc_diagonal, *des_diagonal;
-    int i,j,N,k,rank,numProcs,end,flag;
+    int i,j,N,k,rank,numProcs,flag;
+		int end = -1;
     int num_solutions_local = 0;
     int num_solutions = 0;
     int backtrack = 0;
@@ -142,7 +143,6 @@ int main(int argc,char*argv[]){
 				k = 2;
 			}
     	for (i = 1; i < numProcs; i++) {
-    		end = -1;
     		MPI_Recv(&id, 1, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
     		MPI_Send(&end, 1, MPI_INT, id, 0, MPI_COMM_WORLD);
     	}
