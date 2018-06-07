@@ -55,6 +55,7 @@ int main(int argc,char*argv[]){
     }
 	
     if (rank == COORDINATOR) {
+	    printf("\n");
 	    timetick = dwalltime(); //Empieza a controlar el tiempo
 
     	int id;
