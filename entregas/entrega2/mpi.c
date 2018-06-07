@@ -141,8 +141,10 @@ int main(int argc,char*argv[]){
 				}
     		MPI_Send(&end, 1, MPI_INT, id, 0, MPI_COMM_WORLD);
 				k = 2;
+			}else{
+				k = 1;			
 			}
-    	for (i = 1; i < numProcs; i++) {
+    	for (i = k; i < numProcs; i++) {
     		MPI_Recv(&id, 1, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
     		MPI_Send(&end, 1, MPI_INT, id, 0, MPI_COMM_WORLD);
     	}
@@ -223,6 +225,7 @@ int main(int argc,char*argv[]){
 	    printf("Resultado: %d\n", num_solutions);
 	    printf("Tiempo en segundos %f\n", dwalltime() - timetick); // Informamos el tiempo
 		}
+
     printf("Tiempo local %f rank: %d\n", local_time, rank); // Informamos el tiempo
 
     free(queens);
