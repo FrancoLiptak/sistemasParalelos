@@ -271,4 +271,4 @@ Con eso terminan las diferencias respecto a la solución secuencial.
 
 ## Conclusiones
 
-Gracias al paralelismo de los problemas utilizando Pthreads y OpenMP hemos logrado reducir en gran medida el tiempo requerido para el procesamiento de estos. Pthreads logro mejor speedup y eficiencia en el ejercicio 2, pero esto no se vió reflejado en el ejercicio 1, debido a su complejidad de implementación comparado con OpenMP en loops for anidados, el cual fue más sencillo de implementar y logró mejores resultados en el ejercicio 1.
+Gracias al paralelismo de los problemas utilizando Pthreads y OpenMP hemos logrado reducir en gran medida el tiempo requerido para el procesamiento de estos. Pthreads logró mejor speedup y eficiencia en el ejercicio 2, pero esto no se vió reflejado en el ejercicio 1 debido a su complejidad de implementación comparado con OpenMP en loops for anidados, el cual fue más sencillo de implementar y logró mejores resultados en el ejercicio 1.
