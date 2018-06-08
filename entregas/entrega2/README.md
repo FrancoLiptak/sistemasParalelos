@@ -81,7 +81,7 @@ Finalmente imprimimos el resultado, el tiempo de ejecución local a cada proceso
 |        14          |            3.312708 |                 365596 |
 |        15          |           21.080764 |               2279184 |
 
-##### Tablas con tiempo de ejecucion en mpi con 1 computadora y 4 procesos
+##### Tablas con tiempo de ejecución en MPI con 1 computadora y 4 procesos
 
 | Tamaño del tablero | Tiempo de ejecución | Cantidad de soluciones | Tiempo proceso 0 | Tiempo proceso 1 |  Tiempo proceso 2 |  Tiempo proceso 3 | Desbalance de carga |   Speedup    | Eficiencia |
 | -------------------|:-------------------:|:----------------------:|:----------------:|:----------------:|:-----------------:|:-----------------:|:-------------------:|:------------:|:---------:|
@@ -94,7 +94,7 @@ Finalmente imprimimos el resultado, el tiempo de ejecución local a cada proceso
 |        14          |            1.237127 |                 365596 |         1.014228 |         0.884690 |          0.780851 |          0.853057 |            0.264238 |     2.677742 |  0.669435 |
 |        15          |            7.445144 |                2279184 |         6.086316 |         5.719995 |          4.381050 |          5.981710 |            0.307683 |     2.831478 |  0.707869 |
 
-##### Tabla con tiempo de ejecucion en mpi con 2 computadoras con 2 procesos cada una, 4 procesos total
+##### Tabla con tiempo de ejecución en MPI con 2 computadoras con 2 procesos cada una (4 procesos total)
 
 | Tamaño del tablero | Tiempo de ejecución | Cantidad de soluciones | Tiempo proceso 0 | Tiempo proceso 1 |  Tiempo proceso 2 |  Tiempo proceso 3 | Desbalance de carga | Speedup | Eficiencia |
 | -------------------|:-------------------:|:----------------------:|:----------------:|:----------------:|:-----------------:|:-----------------:|:-------------------:|:-------:|:---------:|
@@ -107,7 +107,7 @@ Finalmente imprimimos el resultado, el tiempo de ejecución local a cada proceso
 |        14          |            0.981952 |                 365596 |         0.960347 |         0.725137 |          0.916139 |          0.720085 |  |  |
 |        15          |            6.958466 |                2279184 |         5.782346 |         4.242574 |          5.502807 |          5.664581 |  |  |
 
-##### Tabla con tiempo de ejecucion en mpi con 2 computadoras con 4 procesos cada una, 8 procesos total
+##### Tabla con tiempo de ejecución en MPI con 2 computadoras con 4 procesos cada una (8 procesos total)
 
 | Tamaño del tablero | Tiempo de ejecución | Cantidad de soluciones | Tiempo proceso 0 | Tiempo proceso 1 |  Tiempo proceso 2 |  Tiempo proceso 3 |  Tiempo proceso 4 |  Tiempo proceso 5 |  Tiempo proceso 6 |  Tiempo proceso 7 | Desbalance de carga | Speedup | Eficiencia |
 | -------------------|:-------------------:|:----------------------:|:----------------------:|:----------------------:|:----------------------:|:----------------------:|:----------------------:|:----------------------:|:----------------------:|:----------------------:|:----------------------:|:----------------------:|:----------------------:|
@@ -120,6 +120,10 @@ Finalmente imprimimos el resultado, el tiempo de ejecución local a cada proceso
 |        14          | 0.559115 | 365596 | 0.278269 | 0.502483 | 0.502787 | 0.482148 | 0.289791 | 0.551848 | 0.494386 | 0.498609 |  |  | |
 |        15          | 3.172357 | 2279184 | 1.619737 | 2.814372 | 2.903924 | 2.988094 | 2.832957 | 2.998604 | 2.712363 | 3.060810 |  |  |  |
 
+## Aclaración importante sobre el cálculo de tiempos
+
 No calculamos desbalance de carga, speedup ni eficiencia de algunos casos de prueba debido a un bug en el programa, el cual ya fue solucionado.
+
 El bug se encontraba en el coordinador, el cual que esperaba un mensaje para devolver un valor inicial de columna para la primer reina de cualquier otro proceso. Esto podía llevar a que algunos procesos se queden sin recibir ningún valor de columna inicial.
+
 Será necesario realizar las pruebas nuevamente con la resolución correcta, la cual ya fue subida al repositorio y entregada a los profesores de la cátedra.
