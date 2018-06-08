@@ -127,3 +127,9 @@ No calculamos desbalance de carga, speedup ni eficiencia de algunos casos de pru
 El bug se encontraba en el coordinador, el cual que esperaba un mensaje para devolver un valor inicial de columna para la primer reina de cualquier otro proceso. Esto podía llevar a que algunos procesos se queden sin recibir ningún valor de columna inicial.
 
 Será necesario realizar las pruebas nuevamente con la resolución correcta, la cual ya fue subida al repositorio y entregada a los profesores de la cátedra.
+
+## Conclusión
+
+Gracias al paralelismo utilizando mpi hemos logrado un mejor tiempo que el secuencial en problemas con tableros de tamaño 8 para 4 procesos y 10 para 8 procesos. Este tamaño minimo se debe al overhead causado por el pasaje de mensajes y la espera sincronica de algunos de estos.
+Pudimos aumentar la eficiencia del programa dandole a el proceso maestro trabajo una vez que repartio todos los trabajos a los worker, reduciendo el desbalance de carga. Tambien usamos pasaje de mensaje no bloqueante con el maestro para que no se quede ocioso mientras espera que un worker le pida trabajo, esto tambien aumento la eficiencia.
+Trabajar con mas computadoras nos dió, en este caso, mejor tiempo debido a que las capacidades de estas eran similares y al usar varias se pudo aprobechar la memoria cache de ambos procesadores.
