@@ -97,8 +97,7 @@ Finalmente imprimimos el resultado, el tiempo de ejecución local a cada proceso
 ##### Tabla con tiempo de ejecucion en mpi con 2 computadoras con 2 procesos cada una, 4 procesos total
 
 | Tamaño del tablero | Tiempo de ejecución | Cantidad de soluciones | Tiempo proceso 0 | Tiempo proceso 1 |  Tiempo proceso 2 |  Tiempo proceso 3 | Desbalance de carga | Speedup | Eficiencia |
-| -------------------|:-------------------:|:----------------------:|:----------------:|:----------------:|:-----------------:|:-----------------:|:-------------------:|:-------:|:-
---------:|
+| -------------------|:-------------------:|:----------------------:|:----------------:|:----------------:|:-----------------:|:-----------------:|:-------------------:|:-------:|:---------:|
 |         8          |            0.007364 |                     92 |         0.000120 |         0.000203 |          0.000000 |          0.000000 |  |  |
 |         9          |            0.006572 |                    352 |         0.000457 |         0.000919 |          0.000000 |          0.000000 |  |  |
 |        10          |            0.006524 |                    724 |         0.002935 |         0.003093 |          0.000000 |          0.000000 |  |  |
