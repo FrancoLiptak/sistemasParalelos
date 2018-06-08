@@ -134,4 +134,4 @@ Gracias al paralelismo utilizando MPI hemos logrado un mejor tiempo que nuestra 
 
 Pudimos aumentar la eficiencia del programa dándole al proceso maestro trabajo una vez que ya repartió todos los trabajos a los workers, reduciendo el desbalance de carga. También usamos pasaje de mensajes no bloqueantes con el maestro para que no se quede ocioso mientras espera que un worker le pida trabajo. Esto también aumento la eficiencia.
 
-Trabajar con mas computadoras nos dió, en este caso, mejor tiempo debido a que las capacidades de éstas eran similares y al usar varias se pudo aprobechar la memoria caché de ambos procesadores.
+Trabajar con más computadoras nos dió, en este caso, mejor tiempo debido a que las capacidades de éstas eran similares y al usar varias se pudo aprobechar la memoria caché de ambos procesadores.
