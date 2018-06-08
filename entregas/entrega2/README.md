@@ -130,6 +130,8 @@ Será necesario realizar las pruebas nuevamente con la resolución correcta, la 
 
 ## Conclusión
 
-Gracias al paralelismo utilizando mpi hemos logrado un mejor tiempo que el secuencial en problemas con tableros de tamaño 8 para 4 procesos y 10 para 8 procesos. Este tamaño minimo se debe al overhead causado por el pasaje de mensajes y la espera sincronica de algunos de estos.
-Pudimos aumentar la eficiencia del programa dandole a el proceso maestro trabajo una vez que repartio todos los trabajos a los worker, reduciendo el desbalance de carga. Tambien usamos pasaje de mensaje no bloqueante con el maestro para que no se quede ocioso mientras espera que un worker le pida trabajo, esto tambien aumento la eficiencia.
-Trabajar con mas computadoras nos dió, en este caso, mejor tiempo debido a que las capacidades de estas eran similares y al usar varias se pudo aprobechar la memoria cache de ambos procesadores.
+Gracias al paralelismo utilizando MPI hemos logrado un mejor tiempo que nuestra resolución secuencial en problemas con tableros de tamaño 8 para 4 procesos y 10 para 8 procesos. Este tamaño mínimo se debe al overhead causado por el pasaje de mensajes y la espera sincrónica de algunos de estos.
+
+Pudimos aumentar la eficiencia del programa dándole al proceso maestro trabajo una vez que ya repartió todos los trabajos a los workers, reduciendo el desbalance de carga. También usamos pasaje de mensajes no bloqueantes con el maestro para que no se quede ocioso mientras espera que un worker le pida trabajo. Esto también aumento la eficiencia.
+
+Trabajar con mas computadoras nos dió, en este caso, mejor tiempo debido a que las capacidades de éstas eran similares y al usar varias se pudo aprobechar la memoria caché de ambos procesadores.
