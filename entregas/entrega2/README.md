@@ -72,27 +72,27 @@ Finalmente imprimimos el resultado, el tiempo de ejecución local a cada proceso
 
 | Tamaño del tablero | Tiempo de ejecución | Cantidad de soluciones |
 | -------------------|:-------------------:|:----------------------:|
-|         8          | 0.000390 | 92 |
-|         9          | 0.001637 | 352 |
-|        10          | 0.007326 | 724 |
-|        11          | 0.029500 | 2680 |
-|        12          | 0.124517 | 14200 |
-|        13          | 0.551008 | 73712 |
-|        14          | 3.312708 | 365596 |
-|        15          | 21.080764 | 2279184 |
+|         8          |            0.000390 |                     92 |
+|         9          |            0.001637 |                    352 |
+|        10          |            0.007326 |                    724 |
+|        11          |            0.029500 |                   2680 |
+|        12          |            0.124517 |                  14200 |
+|        13          |            0.551008 |                  73712 |
+|        14          |            3.312708 |                 365596 |
+|        15          |           21.080764 |               2279184 |
 
 ##### Tablas con tiempo de ejecucion en mpi con 1 computadora y 4 procesos
 
-| Tamaño del tablero | Tiempo de ejecución | Cantidad de soluciones | Tiempo proceso 0 | Tiempo proceso 1 |  Tiempo proceso 2 |  Tiempo proceso 3 | Desbalance de carga | Speedup | Eficiencia |
-| -------------------|:-------------------:|:----------------------:|:----------------------:|:----------------------:|:----------------------:|:----------------------:|:----------------------:|:----------------------:|:----------------------:|
-|         8          | 0.000223 | 92 | 0.000080 | 0.000112 | 0.000146 | 0.000039 | 0.700265 | 1.748878 | 0.437219 |
-|         9          | 0.000698 | 352 | 0.000256 | 0.000454 | 0.000364 | 0.000312 | 0.571428 | 2.3452722063 | 0.586318 |
-|        10          | 0.001644 | 724 | 0.001366 | 0.000931 | 0.001376 | 0.000966 | 0.383703 | 4.456204 | 1.114051 |
-|        11          | 0.008698 | 2680 | 0.006630 | 0.008386 | 0.004440 | 0.004562 | 0.657173 | 3.391584 | 0.847896 |
-|        12          | 0.042872 | 14200 | 0.032806 | 0.030036 | 0.031008 | 0.031314 | 0.088523 | 2.904389 | 0.726097 |
-|        13          | 0.194765 | 73712 | 0.194546 | 0.144610 | 0.157997 | 0.136911 | 0.363591 | 2.829091 | 0.707272 |
-|        14          | 1.237127 | 365596 | 1.014228 | 0.884690 | 0.780851 | 0.853057 | 0.264238 | 2.677742 | 0.669435 |
-|        15          | 7.445144 | 2279184 | 6.086316 | 5.719995 | 4.381050 | 5.981710 | 0.307683 | 2.831478 | 0.707869 |
+| Tamaño del tablero | Tiempo de ejecución | Cantidad de soluciones | Tiempo proceso 0 | Tiempo proceso 1 |  Tiempo proceso 2 |  Tiempo proceso 3 | Desbalance de carga |   Speedup    | Eficiencia |
+| -------------------|:-------------------:|:----------------------:|:----------------:|:----------------:|:-----------------:|:-----------------:|:-------------------:|:------------:|:---------:|
+|         8          |            0.000223 |                     92 |         0.000080 |         0.000112 |          0.000146 |          0.000039 |            0.700265 |     1.748878 |    0.437219 |
+|         9          |            0.000698 |                    352 |         0.000256 |         0.000454 |          0.000364 |          0.000312 |            0.571428 | 2.3452722063 | 0.586318 |
+|        10          |            0.001644 |                    724 |         0.001366 |         0.000931 |          0.001376 |          0.000966 |            0.383703 |     4.456204 |  1.114051 |
+|        11          |            0.008698 |                   2680 |         0.006630 |         0.008386 |          0.004440 |          0.004562 |            0.657173 |     3.391584 |  0.847896 |
+|        12          |            0.042872 |                  14200 |         0.032806 |         0.030036 |          0.031008 |          0.031314 |            0.088523 |     2.904389 |  0.726097 |
+|        13          |            0.194765 |                  73712 |         0.194546 |         0.144610 |          0.157997 |          0.136911 |            0.363591 |     2.829091 |  0.707272 |
+|        14          |            1.237127 |                 365596 |         1.014228 |         0.884690 |          0.780851 |          0.853057 |            0.264238 |     2.677742 |  0.669435 |
+|        15          |            7.445144 |                2279184 |         6.086316 |         5.719995 |          4.381050 |          5.981710 |            0.307683 |     2.831478 |  0.707869 |
 
 ##### Tabla con tiempo de ejecucion en mpi con 2 computadoras con 2 procesos cada una, 4 procesos total
 
@@ -121,5 +121,5 @@ Finalmente imprimimos el resultado, el tiempo de ejecución local a cada proceso
 |        15          | 3.172357 | 2279184 | 1.619737 | 2.814372 | 2.903924 | 2.988094 | 2.832957 | 2.998604 | 2.712363 | 3.060810 |  |  |  |
 
 No calculamos desbalance de carga, speedup ni eficiencia de algunos casos de prueba debido a un bug en el programa, el cual ya fue solucionado.
-El bug se encontraba en el coordinador que esperaba un mensaje para devolver un valor inicial de columna para la primer reina de cualquier otro proceso, esto podia llevar a que algunos procesos se queden sin recibir ningun valor de columna inicial.
-Sera necesario realizar las pruebas nuevamente con la resolucion correcta, la cual ya fue subida al repositorio.
+El bug se encontraba en el coordinador, el cual que esperaba un mensaje para devolver un valor inicial de columna para la primer reina de cualquier otro proceso. Esto podía llevar a que algunos procesos se queden sin recibir ningún valor de columna inicial.
+Será necesario realizar las pruebas nuevamente con la resolución correcta, la cual ya fue subida al repositorio y entregada a los profesores de la cátedra.
