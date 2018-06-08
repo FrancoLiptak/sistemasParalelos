@@ -60,91 +60,91 @@ int main(int argc,char*argv[]){
 
     	int id;
     	for (i = 1; i < numProcs; i++) {
-			k = i-1;
-    		MPI_Send(&k, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
+			k = i-1; // Empezamos desde la columna 0 asignando trabajos. La i del for arranca en 1 para evitar que el coordinador se autoasigne trabajo.
+    		MPI_Send(&k, 1, MPI_INT, i, 0, MPI_COMM_WORLD); // Distribuye el trabajo a los workers
     	}
-		MPI_Irecv(&id, 1, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &req);
+		MPI_Irecv(&id, 1, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &req); // Recv no bloqueante, donde el coordinador se entera que algún worker terminó.
     	for (k = numProcs-1; k < N; k++) {
-				MPI_Test(&req,&flag,&status);
-				if (flag){
-	    		MPI_Send(&k, 1, MPI_INT, id, 0, MPI_COMM_WORLD);											
-					if (k != N-1){
-						MPI_Irecv(&id, 1, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &req);
-					}					
-				}else{
+			MPI_Test(&req,&flag,&status); // Verifica si tiene mensajes en el Recv no bloqueante
+			if (flag){ // Si tiene mensajes (es decir, algún worker terminó) se distribuye mas trabajo
+				MPI_Send(&k, 1, MPI_INT, id, 0, MPI_COMM_WORLD);											
+				if (k != N-1){ // Si k fuera N-1 significaría que no hay más trabajo por realizar (para que no se bloquee el último worker en terminar (ese worker usa send bloqueante))
+					MPI_Irecv(&id, 1, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &req);
+				}					
+			}else{
 			    timetick_local = dwalltime(); //Empieza a controlar el tiempo
-					queens[0] = k;
-		      col_available[k] = 1;
-		      asc_diagonal[0+k] = 1;
-		      des_diagonal[(N-1)-(0-k)] = 1;
-					i = 1;
-					queens_final = 0;
-				  while( queens_final == 0 ){
-			        j = queens[i] + 1;
-				      not_found = 1;
-				      while( (not_found == 1) && (j < N) ){
-				          if ( (col_available[j] == 0) // la columna no tiene otra reina
-				              && (asc_diagonal[i+j] == 0) // la diagonal ascendente no tiene otra reina
-				              && (des_diagonal[(N-1)-(i-j)] == 0)){ // la diagonal descendente no tiene otra reina
-				                  if ( backtrack == 1 ){
-				                      // libero lo que tenia asignado la vuelta pasada
-				                      col_available[queens[i]] = 0;
-				                      asc_diagonal[i+queens[i]] = 0;
-				                      des_diagonal[(N-1)-(i-queens[i])] = 0;
-				                  }
-				                  queens[i] = j;
-				                  col_available[j] = 1;
-				                  asc_diagonal[i+j] = 1;
-				                  des_diagonal[(N-1)-(i-j)] = 1;
-				                  not_found = 0;
-				                  backtrack = 0;
-				          }
-				          j++;
-				      }
+				queens[0] = k;
+				col_available[k] = 1;
+				asc_diagonal[0+k] = 1;
+				des_diagonal[(N-1)-(0-k)] = 1;
+				i = 1;
+				queens_final = 0;
+				while( queens_final == 0 ){
+				j = queens[i] + 1;
+					not_found = 1;
+					while( (not_found == 1) && (j < N) ){
+						if ( (col_available[j] == 0) // la columna no tiene otra reina
+							&& (asc_diagonal[i+j] == 0) // la diagonal ascendente no tiene otra reina
+							&& (des_diagonal[(N-1)-(i-j)] == 0)){ // la diagonal descendente no tiene otra reina
+								if ( backtrack == 1 ){
+									// libero lo que tenia asignado la vuelta pasada
+									col_available[queens[i]] = 0;
+									asc_diagonal[i+queens[i]] = 0;
+									des_diagonal[(N-1)-(i-queens[i])] = 0;
+								}
+								queens[i] = j;
+								col_available[j] = 1;
+								asc_diagonal[i+j] = 1;
+								des_diagonal[(N-1)-(i-j)] = 1;
+								not_found = 0;
+								backtrack = 0;
+						}
+						j++;
+					}
 
 				      // Si no encuentra solucion entonces no tiene solucion el problema o llego al ultimo valido de esa reina en esa rama
 				      // debe ir a la reina anterior
-				      if( not_found == 1 ){ 
-				          // Si es el ultimo valido de la rama entonces tiene que liberar antes de subir
-				          if ((queens[i] != -1) || (i == 1)){
-				              // Libero lo que tenia asignado la vuelta pasada
-				              col_available[queens[i]] = 0;
-				              asc_diagonal[i+queens[i]] = 0;
-				              des_diagonal[(N-1)-(i-queens[i])] = 0;
-				              queens[i] = -1;
-				          }
-		              if (i == 1){
-		                  queens_final = 1;
-		              }
-				          backtrack = 1;
-				          i--;
-				      }else{
-				          // Si no termino entonces sigue avanzando
-				          // Si termino entonces prueba con otra columna para la reina (se repite la busqueda para la misma reina)
-				          if( i != N-1 ){
-				              i++;
-				          }else{
-				              // imprimir
-				              num_solutions_local++;
-				          }
-				      }
-				  }
-		      col_available[k] = 0;
-		      asc_diagonal[0+k] = 0;
-		      des_diagonal[(N-1)-(0-k)] = 0;
+					if( not_found == 1 ){ 
+						// Si es el ultimo valido de la rama entonces tiene que liberar antes de subir
+						if ((queens[i] != -1) || (i == 1)){
+							// Libero lo que tenia asignado la vuelta pasada
+							col_available[queens[i]] = 0;
+							asc_diagonal[i+queens[i]] = 0;
+							des_diagonal[(N-1)-(i-queens[i])] = 0;
+							queens[i] = -1;
+						}
+						if (i == 1){
+							queens_final = 1;
+						}
+						backtrack = 1;
+						i--;
+				    }else{
+						// Si no termino entonces sigue avanzando
+						// Si termino entonces prueba con otra columna para la reina (se repite la busqueda para la misma reina)
+						if( i != N-1 ){
+							i++;
+						}else{
+							// imprimir
+							num_solutions_local++;
+						}
+					}
+				}
+				col_available[k] = 0;
+				asc_diagonal[0+k] = 0;
+				des_diagonal[(N-1)-(0-k)] = 0;
 			    local_time += dwalltime() - timetick_local; //Empieza a controlar el tiempo
-				}
 			}
-			if (!flag){
-				while(!flag){
-					MPI_Test(&req,&flag,&status);
-				}
-    		MPI_Send(&end, 1, MPI_INT, id, 0, MPI_COMM_WORLD);
-				k = 2;
-			}else{
-				k = 1;			
+		}
+		if (!flag){
+			while(!flag){ // Nos aseguramos de que ningún worker quedó esperando que el coordinador reciba su solicitud de trabajo
+				MPI_Test(&req,&flag,&status);
 			}
-    	for (i = k; i < numProcs; i++) {
+    		MPI_Send(&end, 1, MPI_INT, id, 0, MPI_COMM_WORLD); // Le avisamos a dicho worker que no hay mas trabajo
+			k = 2; // Esto significa que ya le avisé a un worker
+		}else{
+			k = 1; // Significa que tengo que empezar con el primer worker, ya que ninguno se quedó esperando respuesta (para el for que sigue)			
+		}
+    	for (i = k; i < numProcs; i++) { // Les aviso a todos que se terminó el trabajo por hacer
     		MPI_Recv(&id, 1, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
     		MPI_Send(&end, 1, MPI_INT, id, 0, MPI_COMM_WORLD);
     	}
@@ -181,7 +181,6 @@ int main(int argc,char*argv[]){
 		            }
 		            j++;
 		        }
-
 		        // Si no encuentra solucion entonces no tiene solucion el problema o llego al ultimo valido de esa reina en esa rama
 		        // debe ir a la reina anterior
 		        if( not_found == 1 ){ 
@@ -218,7 +217,7 @@ int main(int argc,char*argv[]){
 		}
     }
 
-	MPI_Reduce(&num_solutions_local, &num_solutions, 1, MPI_INT, MPI_SUM, COORDINATOR, MPI_COMM_WORLD);
+	MPI_Reduce(&num_solutions_local, &num_solutions, 1, MPI_INT, MPI_SUM, COORDINATOR, MPI_COMM_WORLD); // Obtenemos el número de soluciones totales
 
     if (rank == COORDINATOR) {
 	    printf("Resultado: %d\n", num_solutions);
@@ -227,6 +226,7 @@ int main(int argc,char*argv[]){
 
     printf("Tiempo local %f rank: %d\n", local_time, rank); // Informamos el tiempo
 
+	// Liberamos el espacio utilizado
     free(queens);
     free(col_available);
     free(asc_diagonal);
