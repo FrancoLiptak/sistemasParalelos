@@ -18,7 +18,7 @@ double dwalltime(){
 int main(int argc,char*argv[]){
     int *queens, *col_available, *asc_diagonal, *des_diagonal;
     int i,j,N,k,rank,numProcs,flag;
-		int end = -1;
+	int end = -1;
     int num_solutions_local = 0;
     int num_solutions = 0;
     int backtrack = 0;
@@ -29,7 +29,7 @@ int main(int argc,char*argv[]){
     double local_time = 0;
     int not_found = 1;
     MPI_Status status;
-		MPI_Request req;
+	MPI_Request req;
 
     MPI_Init(&argc,&argv);
 
@@ -43,9 +43,9 @@ int main(int argc,char*argv[]){
     }
 
 
-		//Aloca memoria para las matrices
-		queens=(int*)malloc(sizeof(int)*N);
-		col_available=(int*)calloc(N, sizeof(int));
+	//Aloca memoria para las matrices
+	queens=(int*)malloc(sizeof(int)*N);
+	col_available=(int*)calloc(N, sizeof(int));
     asc_diagonal=(int*)calloc((N-1)*2+1, sizeof(int));
     des_diagonal=(int*)calloc((N-1)*2+1, sizeof(int));
 
@@ -60,11 +60,10 @@ int main(int argc,char*argv[]){
 
     	int id;
     	for (i = 1; i < numProcs; i++) {
-				k = i-1;
-    		MPI_Recv(&id, 1, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
-    		MPI_Send(&k, 1, MPI_INT, id, 0, MPI_COMM_WORLD);
+			k = i-1;
+    		MPI_Send(&k, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
     	}
-			MPI_Irecv(&id, 1, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &req);
+		MPI_Irecv(&id, 1, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &req);
     	for (k = numProcs-1; k < N; k++) {
 				MPI_Test(&req,&flag,&status);
 				if (flag){
@@ -150,17 +149,16 @@ int main(int argc,char*argv[]){
     		MPI_Send(&end, 1, MPI_INT, id, 0, MPI_COMM_WORLD);
     	}
     }else{
-			MPI_Send(&rank, 1, MPI_INT, COORDINATOR, 0, MPI_COMM_WORLD);
-			MPI_Recv(&k, 1, MPI_INT, COORDINATOR, 0, MPI_COMM_WORLD, &status);
+		MPI_Recv(&k, 1, MPI_INT, COORDINATOR, 0, MPI_COMM_WORLD, &status);
 	    //Coloca las reinas
-			while( k != -1 ){
+		while( k != -1 ){
 		    timetick_local = dwalltime(); //Empieza a controlar el tiempo
-				queens[0] = k;
-        col_available[k] = 1;
-        asc_diagonal[0+k] = 1;
-        des_diagonal[(N-1)-(0-k)] = 1;
-				i = 1;
-				queens_final = 0;
+			queens[0] = k;
+	        col_available[k] = 1;
+    	    asc_diagonal[0+k] = 1;
+        	des_diagonal[(N-1)-(0-k)] = 1;
+			i = 1;
+			queens_final = 0;
 		    while( queens_final == 0 ){
 		        j = queens[i] + 1;
 		        not_found = 1;
@@ -211,21 +209,21 @@ int main(int argc,char*argv[]){
 		            }
 		        }
 		    }
-        col_available[k] = 0;
-        asc_diagonal[0+k] = 0;
-        des_diagonal[(N-1)-(0-k)] = 0;
+	        col_available[k] = 0;
+	        asc_diagonal[0+k] = 0;
+	        des_diagonal[(N-1)-(0-k)] = 0;
 		    local_time += dwalltime() - timetick_local; //Empieza a controlar el tiempo
-				MPI_Send(&rank, 1, MPI_INT, COORDINATOR, 0, MPI_COMM_WORLD);
-				MPI_Recv(&k, 1, MPI_INT, COORDINATOR, 0, MPI_COMM_WORLD, &status);
-			}
+			MPI_Send(&rank, 1, MPI_INT, COORDINATOR, 0, MPI_COMM_WORLD);
+			MPI_Recv(&k, 1, MPI_INT, COORDINATOR, 0, MPI_COMM_WORLD, &status);
+		}
     }
 
-		MPI_Reduce(&num_solutions_local, &num_solutions, 1, MPI_INT, MPI_SUM, COORDINATOR, MPI_COMM_WORLD);
+	MPI_Reduce(&num_solutions_local, &num_solutions, 1, MPI_INT, MPI_SUM, COORDINATOR, MPI_COMM_WORLD);
 
     if (rank == COORDINATOR) {
 	    printf("Resultado: %d\n", num_solutions);
 	    printf("Tiempo en segundos %f\n", dwalltime() - timetick); // Informamos el tiempo
-		}
+	}
 
     printf("Tiempo local %f rank: %d\n", local_time, rank); // Informamos el tiempo
 
