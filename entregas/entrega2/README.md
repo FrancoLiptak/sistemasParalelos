@@ -1,4 +1,4 @@
-# Programación con memoria compartida
+# Programación con memoria distribuida
 
 ## Aclaraciones
 
@@ -68,3 +68,17 @@ Finalmente imprimimos el resultado, el tiempo de ejecución local a cada proceso
 
 ### Mediciones
 
+#### Tabla con tiempos de ejecucion en secuencial
+
+| Tamaño del tablero | Tiempo de ejecución | Cantidad de soluciones |
+| 8 | 0.000390 | 92 |
+| 9 | 0.001637 | 352 |
+| 10 | 0.007326 | 724 |
+| 11 | 0.029500 | 2680 |
+| 12 | 0.124517 | 14200 |
+| 13 | 0.551008 | 73712 |
+| 14 | 3.312708 | 365596 |
+| 15 | 21.080764 | 2279184 |
+
+| Computadoras | Procesos | Tamaño del Tablero | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 |
+| 1 | 4 |  |  |  |  |  |  |  |  |  |
