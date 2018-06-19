@@ -89,49 +89,43 @@ Finalmente imprimimos el resultado, el tiempo de ejecución local a cada proceso
 |         9          |            0.001546 |                    352 |         0.000993 | 0.000209 | 0.000265 | 0.000292 |            1.782831 | 1.05886157827 | 0.26471539456 |
 |        10          |            0.002699 |                    724 |         0.002109 | 0.001314 | 0.001206 | 0.001344 |            0.604721 |     2.714338 |  0.678584 |
 |        11          |            0.009596 |                   2680 |         0.007407 | 0.006775 | 0.006064 | 0.005396 |            0.313704 |     3.074197 |  0.768549 |
-|        12          |            0.045124 |                  14200 |         0.039678 | 0.030273 | 0.031206 | 0.026181 |            0.423973 |     2.75944065242 |  0.6898601631 |
-|        13          |            0.210631 |                  73712 |         0.183983 | 0.151058 | 0.140715 | 0.126675 |            0.38051162705 |     2.61598720036 |  0.65399680009 |
-|        14          |            1.158291 |                 365596 |         0.991986 | 0.794524 | 0.774398 | 0.810097 |            0.2581876918 |    2.85999632217 |  0.71499908054 |
-|        15          |            7.519437 |                2279184 |         6.586658 | 5.372211 | 5.190085 | 4.880626 |            0.30977113499 |     2.80350297502 |  0.70087574375 |
+|        12          |            0.045124 |                  14200 |         0.039678 | 0.030273 | 0.031206 | 0.026181 |            0.423973 |     2.759440 |  0.689860 |
+|        13          |            0.210631 |                  73712 |         0.183983 | 0.151058 | 0.140715 | 0.126675 |            0.380511 |     2.615987 |  0.653996 |
+|        14          |            1.158291 |                 365596 |         0.991986 | 0.794524 | 0.774398 | 0.810097 |            0.258187 |    2.859996 |  0.714999 |
+|        15          |            7.519437 |                2279184 |         6.586658 | 5.372211 | 5.190085 | 4.880626 |            0.309771 |     2.803502 |  0.700875 |
 
 ##### Tabla con tiempo de ejecución en MPI con 2 computadoras con 2 procesos cada una (4 procesos total)
 
 | Tamaño del tablero | Tiempo de ejecución | Cantidad de soluciones | Tiempo proceso 0 | Tiempo proceso 1 |  Tiempo proceso 2 |  Tiempo proceso 3 | Desbalance de carga |   Speedup   | Eficiencia |
 | -------------------|:-------------------:|:----------------------:|:----------------:|:----------------:|:-----------------:|:-----------------:|:-------------------:|:-----------:|:---------:|
-|         8          |             0.02875 |                     92 |          0.00007 |         0.000123 |          0.000057 |          0.000027 |            0.000123 | 0,013565217 | 0,003391304  |
-|         9          |            0.027454 |                    352 |         0.000254 |         0.000459 |          0.000258 |          0.000137 |         1,162454874 | 0,059627012 | 0,014906753  |
-|        10          |            0.028889 |                    724 |         0.001013 |         0.001621 |          0.001222 |          0.000808 |         0,697255575 | 0,253591332 | 0,063397833  |
-|        11          |            0.034101 |                   2680 |         0.004535 |          0.00696 |          0.005784 |           0.00447 |          0,45795209 |  0,86507727 | 0,216269318  |
-|        12          |            0.060773 |                  14200 |         0.022872 |         0.041675 |          0.025109 |          0.024223 |         0,660455396 | 2,048886841 | 0,51222171   |
-|        13          |            0.210981 |                  73712 |         0.150704 |         0.137845 |          0.138713 |          0.139424 |         0,090766315 | 2,611647494 | 0,652911874  |
-|        14          |            1.130398 |                 365596 |         0.958633 |         0.828178 |          0.741098 |          0.730746 |         0,279731362 | 2,930567818 | 0,732641954  |
-|        15          |            7.106384 |                2279184 |         5.804697 |          5.39941 |          5.252491 |          4.299635 |         0,290045308 | 2,966454388 | 0,741613597  |
+|         8          |             0.02875 |                     92 |          0.00007 |         0.000123 |          0.000057 |          0.000027 |            0.000123 | 0.013565 | 0.003391  |
+|         9          |            0.027454 |                    352 |         0.000254 |         0.000459 |          0.000258 |          0.000137 |         1.162454 | 0.059627 | 0.014906  |
+|        10          |            0.028889 |                    724 |         0.001013 |         0.001621 |          0.001222 |          0.000808 |         0.697255 | 0.253591 | 0.063397  |
+|        11          |            0.034101 |                   2680 |         0.004535 |          0.00696 |          0.005784 |           0.00447 |          0.457952 |  0.865077 | 0.216269  |
+|        12          |            0.060773 |                  14200 |         0.022872 |         0.041675 |          0.025109 |          0.024223 |         0.660455 | 2.048886 | 0.512221   |
+|        13          |            0.210981 |                  73712 |         0.150704 |         0.137845 |          0.138713 |          0.139424 |         0.090766 | 2.611647 | 0.652911  |
+|        14          |            1.130398 |                 365596 |         0.958633 |         0.828178 |          0.741098 |          0.730746 |         0.279731 | 2.930567 | 0.732641  |
+|        15          |            7.106384 |                2279184 |         5.804697 |          5.39941 |          5.252491 |          4.299635 |         0.290045 | 2.966454 | 0.741613  |
 
 ##### Tabla con tiempo de ejecución en MPI con 2 computadoras con 4 procesos cada una (8 procesos total)
 
 | Tamaño del tablero | Tiempo de ejecución | Cantidad de soluciones | Tiempo proceso 0 | Tiempo proceso 1 |  Tiempo proceso 2 |  Tiempo proceso 3 |  Tiempo proceso 4 |  Tiempo proceso 5 |  Tiempo proceso 6 |  Tiempo proceso 7 | Desbalance de carga | Speedup | Eficiencia |
 | -------------------|:-------------------:|:----------------------:|:----------------------:|:----------------------:|:----------------------:|:----------------------:|:----------------------:|:----------------------:|:----------------------:|:----------------------:|:----------------------:|:----------------------:|:----------------------:|
-|         8          | 0.045022 | 92 | 0.0 | 0.000078 | 0.000049 | 0.000049 | 0.000029 | 0.000029 | 0.000033 | 0.000035 | 2.06622516556 | 0.0086624317 | 0.00108280396 |
-|         9          | 0.047396 | 352 | 0.0 | 0.000279 | 0.000288 | 0.000163 | 0.00018 | 0.000103 | 0.000152 | 0.000139 | 1.76687116564 | 0.03453877964 | 0.00431734745 |
-|        10          | 0.047366 | 724 | 0.0 | 0.001057 | 0.001112 | 0.001043 | 0.000445 | 0.000453 | 0.000472  | 0.000391 | 1.78885984315 | 0.15466790524 | 0.01933348815 |
-|        11          | 0.046045 | 2680 | 0.0 | 0.004492 | 0.004826 | 0.004907 | 0.0032 | 0.001851 | 0.001847 | 0.001735 | 1.71738559804 | 0.640677598 | 0.08008469975 |
-|        12          | 0.056356 | 14200 | 0.0 | 0.021532 | 0.022024 | 0.023107 | 0.016366 | 0.01632 | 0.00851 | 0.00855 | 1.58798718312 | 2.20947192845 | 0.27618399105 |
-|        13          | 0.141969 | 73712 | 0.050516 | 0.096818 | 0.099207 | 0.103858 | 0.09154 | 0.082561 | 0.049126 | 0.045634 | 0.75217517682 | 3.88118532919 | 0.48514816614 |
-|        14          | 0.567177 | 365596 | 0.263926 | 0.479148 | 0.500288 | 0.501781 | 0.479738 | 0.479685 | 0.41963 | 0.293252 | 0.4881513925 | 5.84069523271 | 0.73008690408 |
-|        15          | 3.236788 | 2279184 | 2.515966 | 2.741121 | 2.920514 | 2.946898 | 2.791373 | 2.914176 | 2.836931 | 1.867824 | 0.40086700584 | 6.51286522318 | 0.81410815289 |
-
-## Aclaración importante sobre el cálculo de tiempos
-
-No calculamos desbalance de carga, speedup ni eficiencia de algunos casos de prueba debido a un bug en el programa, el cual ya fue solucionado.
-
-El bug se encontraba en el coordinador, el cual que esperaba un mensaje para devolver un valor inicial de columna para la primer reina de cualquier otro proceso. Esto podía llevar a que algunos procesos se queden sin recibir ningún valor de columna inicial.
-
-Será necesario realizar las pruebas nuevamente con la resolución correcta, la cual ya fue subida al repositorio y entregada a los profesores de la cátedra.
+|         8          | 0.045022 | 92 | 0.0 | 0.000078 | 0.000049 | 0.000049 | 0.000029 | 0.000029 | 0.000033 | 0.000035 | 2.066225 | 0.008662 | 0.001082 |
+|         9          | 0.047396 | 352 | 0.0 | 0.000279 | 0.000288 | 0.000163 | 0.00018 | 0.000103 | 0.000152 | 0.000139 | 1.766871 | 0.034538 | 0.004317 |
+|        10          | 0.047366 | 724 | 0.0 | 0.001057 | 0.001112 | 0.001043 | 0.000445 | 0.000453 | 0.000472  | 0.000391 | 1.788859 | 0.154667 | 0.019333 |
+|        11          | 0.046045 | 2680 | 0.0 | 0.004492 | 0.004826 | 0.004907 | 0.0032 | 0.001851 | 0.001847 | 0.001735 | 1.717385 | 0.640677 | 0.080084 |
+|        12          | 0.056356 | 14200 | 0.0 | 0.021532 | 0.022024 | 0.023107 | 0.016366 | 0.01632 | 0.00851 | 0.00855 | 1.587987 | 2.209471 | 0.276183 |
+|        13          | 0.141969 | 73712 | 0.050516 | 0.096818 | 0.099207 | 0.103858 | 0.09154 | 0.082561 | 0.049126 | 0.045634 | 0.752175 | 3.881185 | 0.485148 |
+|        14          | 0.567177 | 365596 | 0.263926 | 0.479148 | 0.500288 | 0.501781 | 0.479738 | 0.479685 | 0.41963 | 0.293252 | 0.488151 | 5.840695 | 0.730086 |
+|        15        | 3.236788 | 2279184 | 2.515966 | 2.741121 | 2.920514 | 2.946898 | 2.791373 | 2.914176 | 2.836931 | 1.867824 | 0.400867 | 6.512865 | 0.814108 |
 
 ## Conclusión
 
-Gracias al paralelismo utilizando MPI hemos logrado un mejor tiempo que nuestra resolución secuencial en problemas con tableros de tamaño 8 para 4 procesos y 10 para 8 procesos. Este tamaño mínimo se debe al overhead causado por el pasaje de mensajes y la espera sincrónica de algunos de estos.
+Gracias al paralelismo utilizando MPI hemos logrado un mejor tiempo que nuestra resolución secuencial en problemas con tableros de tamaño 8 para 4 procesos y 12 para 8 procesos. Este tamaño mínimo se debe al overhead causado por el pasaje de mensajes y la espera sincrónica de algunos de estos.
 
 Pudimos aumentar la eficiencia del programa dándole al proceso maestro trabajo una vez que ya repartió todos los trabajos a los workers, reduciendo el desbalance de carga. También usamos pasaje de mensajes no bloqueantes con el maestro para que no se quede ocioso mientras espera que un worker le pida trabajo. Esto también aumento la eficiencia.
 
-Trabajar con más computadoras nos dió, en este caso, mejor tiempo debido a que las capacidades de éstas eran similares y al usar varias se pudo aprobechar la memoria caché de ambos procesadores.
+Trabajar con más computadoras nos dió mejor tiempo cuando el problema era de grano grueso (mucho procesamiento y poco pasaje de mensajes) debido a que las capacidades de éstas eran similares y al usar varias se pudo aprobechar la memoria caché de ambos procesadores (favoreciendo mucho procesamiento), y a que el pasaje de mensajes entre computadoras es más lento que dentro de una misma (desfavoreciendo mucho pasaje de mensajes).
+
+Al utilizar muchos procesos (8) y poco tamaño de tablero se daban situaciones en las cuales la resolucion, debido al tiempo del pasaje de mensaje, daba un speedup menor a 1, pero al aumentar el tamaño del tablero esto se revierte aumentando en gran medida el speedup.
