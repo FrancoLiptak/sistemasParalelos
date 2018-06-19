@@ -126,6 +126,6 @@ Gracias al paralelismo utilizando MPI hemos logrado un mejor tiempo que nuestra 
 
 Pudimos aumentar la eficiencia del programa dándole al proceso maestro trabajo una vez que ya repartió todos los trabajos a los workers, reduciendo el desbalance de carga. También usamos pasaje de mensajes no bloqueantes con el maestro para que no se quede ocioso mientras espera que un worker le pida trabajo. Esto también aumento la eficiencia.
 
-Trabajar con más computadoras nos dió mejor tiempo cuando el problema era de grano grueso (mucho procesamiento y poco pasaje de mensajes) debido a que las capacidades de éstas eran similares y al usar varias se pudo aprobechar la memoria caché de ambos procesadores (favoreciendo mucho procesamiento), y a que el pasaje de mensajes entre computadoras es más lento que dentro de una misma (desfavoreciendo mucho pasaje de mensajes).
+Trabajar con más computadoras nos dió mejor tiempo cuando el problema era de grano grueso (mucho procesamiento y poco pasaje de mensajes) debido a que las capacidades de éstas eran similares y al usar varias se pudo aprovechar la memoria caché de ambos procesadores (favoreciendo mucho procesamiento), y a que el pasaje de mensajes entre computadoras es más lento que dentro de una misma (desfavoreciendo mucho pasaje de mensajes).
 
 Al utilizar muchos procesos (8) y poco tamaño de tablero se daban situaciones en las cuales la resolucion, debido al tiempo del pasaje de mensaje, daba un speedup menor a 1, pero al aumentar el tamaño del tablero esto se revierte aumentando en gran medida el speedup.
