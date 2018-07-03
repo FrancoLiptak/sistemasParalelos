@@ -266,6 +266,7 @@ int main(int argc,char* argv[]){
                     C[despB+ i*r+j]=1;
                     D[despB+ i*r+j]=1;
                     M[despB+ i*r+j]=0;
+                    P[despB+ i*r+j]=0;
                     if(J<=I){ // Para controlar los bloques triangulares (No iteramos los bloques que 'tendrían todos 0')
                         if(I==J){ // Bloques triangulares en la matriz L
                             if(i>=j){
@@ -360,6 +361,7 @@ int main(int argc,char* argv[]){
     free(D);
     free(L);
     free(M);
+    free(P);
 
     return(0);
 }

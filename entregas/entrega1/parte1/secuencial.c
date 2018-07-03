@@ -16,7 +16,7 @@ double dwalltime(){
 
 int main(int argc,char* argv[]){
 
-    double *A,*B,*C,*D,*L,*M; // Matrices (M será la matriz resultado)
+    double *A,*B,*C,*D,*L,*M,*P; // Matrices (M será la matriz resultado)
     int I,J,K,i,j,k; // Índices para los for
     int despA, despB, despC, desp; // Desplazamientos para las multiplicaciones por bloques
     double b,l; // Para los productos escalares
@@ -44,6 +44,7 @@ int main(int argc,char* argv[]){
     D=(double*)malloc(sizeof(double)*sizeMatrix);
     L=(double*)malloc(sizeof(double)*sizeL);
     M=(double*)malloc(sizeof(double)*sizeMatrix);
+    P=(double*)malloc(sizeof(double)*sizeMatrix);
 
     // Inicialización de matrices
     despA = 0;
@@ -61,6 +62,7 @@ int main(int argc,char* argv[]){
                     C[despB+ i*r+j]=1;
                     D[despB+ i*r+j]=1;
                     M[despB+ i*r+j]=0;
+                    P[despB+ i*r+j]=0;
                     if(J<=I){ // Para controlar los bloques triangulares (No iteramos los bloques que 'tendrían todos 0')
                         if(I==J){ // Bloques triangulares en la matriz L
                             if(i>=j){
@@ -149,19 +151,7 @@ int main(int argc,char* argv[]){
         };  
     }; 
 
-    // Volvemos a poner la matriz A en 0, a fin de reutilizarla para los cálculos y ahorrar el espacio ocupado
-    for (I= 0; I< N; I++){
-        for(J=0;J<N;J++){
-            despB=(I*N+J)*r*r;
-            for (i= 0; i< r; i++){
-                for (j=0;j<r;j++){
-                    A[despB+ i*r+j]= 0;
-                };
-            };
-        };
-    };
-
-    // Terminamos de calcular el primer término calculando lA𝐵𝐶 y lo guardamos en A
+    // Terminamos de calcular el primer término calculando lA𝐵𝐶 y lo guardamos en P
     for (I=0;I<N;I++){
         for (J=0;J<N;J++){
             despC = (I*N+J)*sizeBlock;
@@ -172,7 +162,7 @@ int main(int argc,char* argv[]){
                     for (j=0;j<r;j++){
                         desp = despC + i*r+j;
                         for (k=0;k<r;k++){
-                            A[desp] += M[despA + i*r+k]*C[despB + k*r+j]; 
+                            P[desp] += M[despA + i*r+k]*C[despB + k*r+j]; 
                         };
                     }
                 };
@@ -182,7 +172,7 @@ int main(int argc,char* argv[]){
 
     // Ya terminamos de calcular el primer término
 
-    // Volvemos a poner la matriz A en 0, a fin de reutilizarla para los cálculos y ahorrar el espacio ocupado
+    // Volvemos a poner la matriz M en 0, a fin de reutilizarla para los cálculos y ahorrar el espacio ocupado
     for (I= 0; I<N; I++){
         for(J=0;J<N;J++){
             despB=(I*N+J)*r*r;
@@ -283,7 +273,7 @@ int main(int argc,char* argv[]){
             despB=(I*N+J)*r*r;
             for (i= 0; i< r; i++){
                 for (j=0;j<r;j++){
-                    M[despB+ i*r+j] = A[despB+ i*r+j] + B[despB+ i*r+j];
+                    M[despB+ i*r+j] = P[despB+ i*r+j] + B[despB+ i*r+j];
                 };
             };
         };
@@ -316,6 +306,7 @@ int main(int argc,char* argv[]){
     free(D);
     free(L);
     free(M);
+    free(P);
 
     return(0);
 }
