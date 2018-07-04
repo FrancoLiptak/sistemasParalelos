@@ -64,9 +64,11 @@ En esta solución la concurrencia se encuentra en que los bloques se repartiran 
 Se crearan `NUM_THREADS` hilos, y cada hilo ejecutara la funcion `producto` utilizando su id para saber que filas de bloques le pertenecen.
 
 Tambien se ha cambiado el orden de algunas operaciones para favorecer al parelelismo, cuando en la secuencial se hacian los calculos de la forma lA, lAB, lABC, bL, bLB, bLBD y finalmente lABC + bLBD, en la solucion con pthreads se realiza de la siguiente forma:
-- lA, BC, bL y BD
-- lABC y bLBD
-- lABC + bLBD
+
+1. lA, BC, bL y BD
+2. lABC y bLBD
+3. lABC + bLBD
+
 Donde los calculos de cada punto (1, 2 y 3) se realizan en forma paralela, ya que los threads no interfieren entre si, el acceso a las variables compartidas es solo para lectura.
 Se utilizan barreras entre cada uno de estos puntos para sincronizar los threads, ya que los resultados de cada punto dependen de los del punto anterior, entonces los threads deben de terminar de calcular los resultados para poder proseguir.
 
@@ -81,9 +83,11 @@ El usuario deberá ingresar, además de la cantidad de bloques por lado y la lon
 La cantidad de hilos a utilizar es la cantidad total, es decir, la ingresada por el usuario (que fue configurada con `omp_set_num_threads(NUM_THREADS);`).
 
 Utilizamos la instrucción `#pragma omp parallel` con el fin de paralelizar distintas partes del código. Las partes puntualmente son: 
-- lA, BC, bL, BD
-- lABC y bLBD
-- lABC + bLBD
+
+1. lA, BC, bL, BD
+2. lABC y bLBD
+3. lABC + bLBD
+
 Se ponen como privadas variables que serán utilizadas por todos los hilos que no sean los vectores (indices y desplazamientos), con el fin de que un hilo no vea las modificaciones hechas por otro, y no haya conflicto entre sus procesamientos de matrices. 
 
 Luego de esta primera gran división en partes de la resolución del problema, cada una de las operaciones (que recordemos, se resuelven con `for`) cuenta con un encabezado `#pragma omp for`, el cual indica que se va a paralelizar la ejecución de un `for`. 
