@@ -60,29 +60,35 @@ La solución con Pthreads se basa en nuestra solución secuencial y por ende, se
 
 El usuario deberá ingresar, además de la cantidad de bloques por lado y la longitud de cada bloque, el número de hilos con el que quiere trabajar. Recordar que trabajamos con potencias de dos.
 
-Para esta solución utilizaremos funciones para la suma (`suma`), el producto entre dos matrices (`producto`), el producto entre una matriz triangular y una cuadrada (`productoTriangular`), el producto entre una matriz y un elemento (`productoElemento`), el producto entre una matriz triangular y un elemento (`productoElementoTriangular`) y la inicialización en cero (`zero`).
-
-Dado que las funciones son generales, se requiere un método para poder pasarle las variables sobre las que va a trabajar. Para esto usamos `struct`, lo cual nos permite pasarle múltiples variables de diferentes tipos a las funciones. De esta forma es posible pasarle a las funciones el id del hilo y las matrices sobre las que va a trabajar (se pasan los punteros y trabaja sobre la variable global). Utilizamos 3 `struct`: 
-
--`arg_struct`: Se utiliza en la multiplicación de matrices y matrices triangulares. Posee un `int` para pasar el id del hilo y tres argumentos más, los cuales son: C = A*B, A en `arg1`, B en `arg2` y C en `arg3`.
-
--`arg_struct_element`: Se utiliza en la multiplicación de una matriz por un elemento. Posee un `int` para pasar el id del hilo y tres argumentos más, los cuales son: C = a*B, a en `arg1`, B en `arg2` y C en `arg3`.
-
--`arg_struct_zero`: Se utiliza para inicializar una matriz con todos sus elementos en 0. Posee un `int` para pasar el id del hilo y otro argumento para pasar la matriz que se inicializará con todos sus elementos en 0 (`arg1`).
-
 En esta solución la concurrencia se encuentra en que los bloques se repartiran entre los hilos de modo que en cada operacion de una matriz, un hilo tomará N/NUM_THREADS filas de bloques.
+Se crearan `NUM_THREADS` hilos, y cada hilo ejecutara la funcion `producto` utilizando su id para saber que filas de bloques le pertenecen.
+
+Tambien se ha cambiado el orden de algunas operaciones para favorecer al parelelismo, cuando en la secuencial se hacian los calculos de la forma lA, lAB, lABC, bL, bLB, bLBD y finalmente lABC + bLBD, en la solucion con pthreads se realiza de la siguiente forma:
+1. lA, BC, bL y BD
+2. lABC y bLBD
+3. lABC + bLBD
+Donde los calculos de cada punto (1, 2 y 3) se realizan en forma paralela, ya que los threads no interfieren entre si, el acceso a las variables compartidas es solo para lectura.
+Se utilizan barreras entre cada uno de estos puntos para sincronizar los threads, ya que los resultados de cada punto dependen de los del punto anterior, entonces los threads deben de terminar de calcular los resultados para poder proseguir.
+
+Al finalizar, se destruye la barrera creada y se libera la memoria ocupada por los vectores. 
 
 ### Resolución con OpenMP
 
-La solución con OpenMP se basa en nuestra solución secuencial y por ende, se pasa a explicar sus diferencias.
+La solución con OpenMP es similar a la de Pthreads y por ende, se pasa a explicar sus diferencias.
 
 El usuario deberá ingresar, además de la cantidad de bloques por lado y la longitud de cada bloque, el número de hilos con el que quiere trabajar. Recordar que trabajamos con potencias de dos.
 
-Utilizamos la instrucción `#pragma omp parallel` con el fin de paralelizar distintas partes del código. Las partes puntualmente son: resolución del primer término, resolución del segundo término y la suma de los resultados de los otros términos. La cantidad de hilos a utilizar es la cantidad total, es decir, la ingresada por el usuario (que fue configurada con `omp_set_num_threads(NUM_THREADS);`).
+La cantidad de hilos a utilizar es la cantidad total, es decir, la ingresada por el usuario (que fue configurada con `omp_set_num_threads(NUM_THREADS);`).
 
-Luego de esta primera gran división en partes de la resolución del problema, cada una de las operaciones (que recordemos, se resuelven con `for`) cuenta con un encabezado `#pragma omp for`, el cual indica que se va a paralelizar la ejecución de un `for`. Además, se ponen como privadas variables que serán utilizadas por todos los hilos, con el fin de que un hilo no vea las modificaciones hechas por otro, y no haya conflicto entre sus procesamientos. Por último, también se utiliza la claúsula `collapse(N)`, la cual nos garantiza el uso de Threads para los valores I y J, utilizados en los `for` "mas de afuera", los cuales son utilizados para elegir el bloque a computar por cada hilo.
+Utilizamos la instrucción `#pragma omp parallel` con el fin de paralelizar distintas partes del código. Las partes puntualmente son: 
+1. lA, BC, bL, BD
+2. lABC y bLBD
+3. lABC + bLBD
+Se ponen como privadas variables que serán utilizadas por todos los hilos que no sean los vectores (indices y desplazamientos), con el fin de que un hilo no vea las modificaciones hechas por otro, y no haya conflicto entre sus procesamientos de matrices. 
 
-No hay mas diferencias con la solución secuencial.
+Luego de esta primera gran división en partes de la resolución del problema, cada una de las operaciones (que recordemos, se resuelven con `for`) cuenta con un encabezado `#pragma omp for`, el cual indica que se va a paralelizar la ejecución de un `for`. 
+También se utiliza la claúsula `collapse(N)`, la cual nos garantiza el uso de Threads para los valores I y J, utilizados en los `for` "mas de afuera", los cuales son utilizados para elegir el bloque a computar por cada hilo.
+Por último,se utiliza la clausula `nowait` en ya que los fors de cada parte del problema pueden ejecutarse en paralelos, la barrera implicita al final de cada for es innecesaria. 
 
 ### Mediciones
 
