@@ -96,73 +96,73 @@ Por último,se utiliza la clausula `nowait` en ya que los fors de cada parte del
 
 | Tamaño de la matriz | Tiempo secuencial | Tiempo con Pthreads | Tiempo con OpenMP |
 | --------------------|:-----------------:|:-------------------:|:-----------------:|
-| 4 bloques de 128    | 4.6964404         | 4.866993667         | 4.766518          |
-| 8 bloques de 128    | 37.3414172        | 38.871684           | 38.231288         |
-| 16 bloques de 128   | 299.779390        | 312.904854          | 310.314079        |
+| 16 bloques de 32    | 4.6964404         | 4.866993667         | 4.766518          |
+| 32 bloques de 32    | 37.3414172        | 38.871684           | 38.231288         |
+| 64 bloques de 32   | 299.779390        | 312.904854          | 310.314079        |
 
 ##### Speedup con un solo hilo en las soluciones con Pthreads y OpenMP:
 
 | Tamaño de la matriz | Speedup con Pthreads | Speedup con OpenMP |
 | --------------------|:--------------------:|:------------------:|
-| 4 bloques de 128    | 0.96495716274        | 0.98529794705      |
-| 8 bloques de 128    | 0.96063286581        | 0.97672401725      |
-| 16 bloques de 128   | 0.95805285909        | 0.96605152742      |
+| 16 bloques de 32    | 0.96495716274        | 0.98529794705      |
+| 32 bloques de 32    | 0.96063286581        | 0.97672401725      |
+| 64 bloques de 32   | 0.95805285909        | 0.96605152742      |
 
 ##### Eficiencia con un solo hilo en las soluciones con Pthreads y OpenMP:
 
 | Tamaño de la matriz | Eficiencia con Pthreads | Eficiencia con OpenMP |
 | --------------------|:-----------------------:|:---------------------:|
-| 4 bloques de 128    | 0.96495716274           | 0.98529794705         |
-| 8 bloques de 128    | 0.96063286581           | 0.97672401725         |
-| 16 bloques de 128   | 0.95805285909           | 0.96605152742         |
+| 16 bloques de 32    | 0.96495716274           | 0.98529794705         |
+| 32 bloques de 32    | 0.96063286581           | 0.97672401725         |
+| 64 bloques de 32   | 0.95805285909           | 0.96605152742         |
 
 ##### Tiempo con dos hilos en las soluciones con Pthreads y OpenMP:
 
 | Tamaño de la matriz | Tiempo secuencial | Tiempo con Pthreads | Tiempo con OpenMP |
 | --------------------|:-----------------:|:-------------------:|:-----------------:|
-| 4 bloques de 128    | 4.6964404         | 2.693269            | 2.651285          |
-| 8 bloques de 128    | 37.3414172        | 21.589481           | 21.196580         |
-| 16 bloques de 128   | 299.779390        | 171.639295          | 168.560662        |
+| 16 bloques de 32    | 4.6964404         | 2.693269            | 2.651285          |
+| 32 bloques de 32    | 37.3414172        | 21.589481           | 21.196580         |
+| 64 bloques de 32   | 299.779390        | 171.639295          | 168.560662        |
 
 ##### Speedup con dos hilos en las soluciones con Pthreads y OpenMP:
 
 | Tamaño de la matriz | Speedup con Pthreads | Speedup con OpenMP |
 | --------------------|:--------------------:|:------------------:|
-| 4 bloques de 128    | 1.74376952321        | 1.77138270688      |
-| 8 bloques de 128    | 1.72961161966        | 1.761671798        |
-| 16 bloques de 128   | 1.74656619278        | 1.77846590327      |
+| 16 bloques de 32    | 1.74376952321        | 1.77138270688      |
+| 32 bloques de 32    | 1.72961161966        | 1.761671798        |
+| 64 bloques de 32   | 1.74656619278        | 1.77846590327      |
 
 ##### Eficiencia con dos hilos en las soluciones con Pthreads y OpenMP:
 
 | Tamaño de la matriz | Eficiencia con Pthreads | Eficiencia con OpenMP |
 | --------------------|:-----------------------:|:---------------------:|
-| 4 bloques de 128    | 0.8718847616            | 0.88569135344         |
-| 8 bloques de 128    | 0.86480580983           | 0.880835899           |
-| 8 bloques de 128    | 0.87328309639           | 0.88923295163         |
+| 16 bloques de 32    | 0.8718847616            | 0.88569135344         |
+| 32 bloques de 32    | 0.86480580983           | 0.880835899           |
+| 64 bloques de 32    | 0.87328309639           | 0.88923295163         |
 
 ##### Tiempo con cuatro hilos en las soluciones con Pthreads y OpenMP:
 
 | Tamaño de la matriz | Tiempo secuencial | Tiempo con Pthreads | Tiempo con OpenMP |
 | --------------------|:-----------------:|:-------------------:|:-----------------:|
-| 4 bloques de 128    | 4.6964404         | 1.528396            | 1.453902          |
-| 8 bloques de 128    | 37.3414172        | 11.664970           | 11.401058         |
-| 16 bloques de 128   | 299.779390        | 92.619321           | 91.318975         |
+| 16 bloques de 32    | 4.6964404         | 1.528396            | 1.453902          |
+| 32 bloques de 32    | 37.3414172        | 11.664970           | 11.401058         |
+| 64 bloques de 32   | 299.779390        | 92.619321           | 91.318975         |
 
 ##### Speedup con cuatro hilos en las soluciones con Pthreads y OpenMP:
 
 | Tamaño de la matriz | Speedup con Pthreads | Speedup con OpenMP |
 | --------------------|:--------------------:|:------------------:|
-| 4 bloques de 128    | 3.0727902978         | 3.23023174877      |
-| 8 bloques de 128    | 3.20115844276        | 3.27525894527      |
-| 8 bloques de 128    | 3.23668308905        | 3.28277217303      |
+| 16 bloques de 32    | 3.0727902978         | 3.23023174877      |
+| 32 bloques de 32    | 3.20115844276        | 3.27525894527      |
+| 34 bloques de 32    | 3.23668308905        | 3.28277217303      |
 
 ##### Eficiencia con cuatro hilos en las soluciones con Pthreads y OpenMP:
 
 | Tamaño de la matriz | Eficiencia con Pthreads | Eficiencia con OpenMP |
 | --------------------|:-----------------------:|:---------------------:|
-| 4 bloques de 128    | 0.76819757445           | 0.80755793719         |
-| 8 bloques de 128    | 0.80028961069           | 0.81881473631         |
-| 8 bloques de 128    | 0.80917077226           | 0.82069304325         |
+| 16 bloques de 32    | 0.76819757445           | 0.80755793719         |
+| 32 bloques de 32    | 0.80028961069           | 0.81881473631         |
+| 64 bloques de 32    | 0.80917077226           | 0.82069304325         |
 
 ## Ejercicio 2
 
