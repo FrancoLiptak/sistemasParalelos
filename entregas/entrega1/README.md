@@ -7,6 +7,7 @@ El presente trabajo ha sido desarrollado en grupo por Franco Emanuel Liptak y Ga
 Se ofrece también la posibilidad de descargar los archivos de extensión '.c' (es decir, los archivos que serán utilizados por el compilador, para compilar en base a la gramática y sintaxis de C) desde el siguiente repositorio de GitHub: https://github.com/okason97/sistemasParalelos, el cual por supuesto, tiene como colaboradores a ambos integrantes del grupo. 
 
 Nuestros usuarios de GitHub son:
+
 - okason97 (Gastón)
 - FrancoLiptak (Franco)
 
