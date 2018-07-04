@@ -64,9 +64,9 @@ En esta solución la concurrencia se encuentra en que los bloques se repartiran 
 Se crearan `NUM_THREADS` hilos, y cada hilo ejecutara la funcion `producto` utilizando su id para saber que filas de bloques le pertenecen.
 
 Tambien se ha cambiado el orden de algunas operaciones para favorecer al parelelismo, cuando en la secuencial se hacian los calculos de la forma lA, lAB, lABC, bL, bLB, bLBD y finalmente lABC + bLBD, en la solucion con pthreads se realiza de la siguiente forma:
-1. lA, BC, bL y BD
-2. lABC y bLBD
-3. lABC + bLBD
+- lA, BC, bL y BD
+- lABC y bLBD
+- lABC + bLBD
 Donde los calculos de cada punto (1, 2 y 3) se realizan en forma paralela, ya que los threads no interfieren entre si, el acceso a las variables compartidas es solo para lectura.
 Se utilizan barreras entre cada uno de estos puntos para sincronizar los threads, ya que los resultados de cada punto dependen de los del punto anterior, entonces los threads deben de terminar de calcular los resultados para poder proseguir.
 
