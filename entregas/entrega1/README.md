@@ -81,9 +81,9 @@ El usuario deberá ingresar, además de la cantidad de bloques por lado y la lon
 La cantidad de hilos a utilizar es la cantidad total, es decir, la ingresada por el usuario (que fue configurada con `omp_set_num_threads(NUM_THREADS);`).
 
 Utilizamos la instrucción `#pragma omp parallel` con el fin de paralelizar distintas partes del código. Las partes puntualmente son: 
-1. lA, BC, bL, BD
-2. lABC y bLBD
-3. lABC + bLBD
+- lA, BC, bL, BD
+- lABC y bLBD
+- lABC + bLBD
 Se ponen como privadas variables que serán utilizadas por todos los hilos que no sean los vectores (indices y desplazamientos), con el fin de que un hilo no vea las modificaciones hechas por otro, y no haya conflicto entre sus procesamientos de matrices. 
 
 Luego de esta primera gran división en partes de la resolución del problema, cada una de las operaciones (que recordemos, se resuelven con `for`) cuenta con un encabezado `#pragma omp for`, el cual indica que se va a paralelizar la ejecución de un `for`. 
