@@ -183,20 +183,6 @@ void * producto(void * arg){
 
     pthread_barrier_wait(&barrier);
 
-    // Volvemos a poner la matriz M en 0, a fin de reutilizarla para los cálculos y ahorrar el espacio ocupado
-    for (I= base; I<limite; I++){
-        for(J=0;J<N;J++){
-            despB=(I*N+J)*r*r;
-            for (i= 0; i< r; i++){
-                for (j=0;j<r;j++){
-                    M[despB+ i*r+j]= 0;
-                };
-            };
-        };
-    };
-
-    pthread_barrier_wait(&barrier);
-
     // Finalmente calculamos 𝑙.𝐴𝐵𝐶 + 𝑏𝐿𝐵𝐷 y guardamos el resultado en M. Recordar que A = 𝑙.𝐴𝐵𝐶 y B = 𝑏𝐿𝐵𝐷.
     for (I= base; I< limite; I++){
         for(J=0;J<N;J++){
