@@ -289,7 +289,7 @@ int main(int argc,char* argv[]){
     }
    
     // Finalmente calculamos 𝑙.𝐴𝐵𝐶 + 𝑏𝐿𝐵𝐷 y guardamos el resultado en M. Recordar que A = 𝑙.𝐴𝐵𝐶 y B = 𝑏𝐿𝐵𝐷.
-    #pragma omp parallel for private(despB, i, j) collapse(2)
+    #pragma omp parallel for collapse(2) private(despB, i, j) 
     for (I= 0; I< N; I++){
         for(J=0;J<N;J++){
             despB=(I*N+J)*r*r;
