@@ -14,7 +14,7 @@ Las pruebas se hicieron con el procesador AMD Phenom II X6 1100T Black Edition.
 
 ## Ejercicio 1
 
-*"Realizar un algoritmo Pthreads y otro OpenMP que resuelva la expresión: M = lABC + bLBD. Donde A, B, C y D son matrices de NxN. L matriz triangular inferior de NxN. 𝑏 y 𝑙 son los promedios de los valores de los elementos de las matrices B y L, respectivamente.
+*"Realizar un algoritmo Pthreads y otro OpenMP que resuelva la expresión: M = lABC + bLBD. Donde A, B, C y D son matrices de NxN. L matriz triangular inferior de NxN. b y l son los promedios de los valores de los elementos de las matrices B y L, respectivamente.
 Evaluar N=512, 1024 y 2048."*
 
 ### Resolución secuencial
