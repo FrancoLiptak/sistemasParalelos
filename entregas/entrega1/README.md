@@ -92,13 +92,13 @@ Por último,se utiliza la clausula `nowait` en ya que los fors de cada parte del
 
 ### Mediciones
 
-##### Tiempo con un solo hilo en las soluciones con Pthreads y OpenMP:
+##### Tiempo con un solo hilo en todas las soluciones:
 
 | Tamaño de la matriz | Tiempo secuencial | Tiempo con Pthreads | Tiempo con OpenMP |
 | --------------------|:-----------------:|:-------------------:|:-----------------:|
-| 16 bloques de 32    | 4.6964404         | 4.866993667         | 4.766518          |
-| 32 bloques de 32    | 37.3414172        | 38.871684           | 38.231288         |
-| 64 bloques de 32   | 299.779390        | 312.904854          | 310.314079        |
+| 16 bloques de 32    | 1.4131339         | 4.866993667         | 4.766518          |
+| 32 bloques de 32    | 11.202003         | 38.871684           | 38.231288         |
+| 64 bloques de 32    | 88.6258958        | 312.904854          | 310.314079        |
 
 ##### Speedup con un solo hilo en las soluciones con Pthreads y OpenMP:
 
